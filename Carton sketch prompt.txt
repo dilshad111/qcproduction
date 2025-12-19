@@ -1,0 +1,35 @@
+You are an expert technical illustrator. Create a clean engineering die-line sketch of a corrugated carton as user select the FEFCO standard in Create New Job Card from using the user's input dimensions (LxWxH).
+
+CARTON DIMENSIONS:
+• Length (L): {{L}} mm
+• Width (W):  {{W}} mm
+• Height (H): {{H}} mm
+
+STRUCTURE:
+• Glue flap: fixed at 35 mm
+• Panel layout from left to right:
+  1. Glue Flap (35 mm)
+  2. Length Panel (L)
+  3. Width Panel (W)
+  4. Length Panel (L)
+  5. Width Panel (W)
+
+TOP & BOTTOM FLAPS:
+• Flap 1 (far side) = 0.5 × Width + Height
+• Flap 2 (near side) = 0.5 × Width
+
+SKETCH STYLE:
+• Produce a flat 2D die-line layout (no 3D).
+• Use clean, thin, technical black lines.
+• Mark all four main panels clearly.
+• Add double-headed arrows to show:
+  - Length (L)
+  - Width (W)
+  - Height (H)
+• Label each dimension next to the arrows (e.g., “L = {{L}} mm”).
+• Label sections: "Glue Flap 35 mm", "Length Panel", "Width Panel".
+• Keep proportions correct.
+• White background, no shading, no watermark.
+
+OUTPUT:
+Return only the generated engineering sketch as a high-resolution JPEG
