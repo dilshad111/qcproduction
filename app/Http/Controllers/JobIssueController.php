@@ -33,8 +33,9 @@ class JobIssueController extends Controller
         $jobCard = JobCard::find($request->job_card_id);
         
         // Calculate Sheet Qty
-        // Formula: Required Sheet Qty = Carton Qty / UP
-        $requiredSheets = ceil($request->order_qty_cartons / $jobCard->ups);
+        // Formula: Required Sheet Qty = Carton Qty / ups
+        $ups = $jobCard->ups > 0 ? $jobCard->ups : 1;
+        $requiredSheets = ceil($request->order_qty_cartons / $ups);
 
         $issue = JobIssue::create([
             'customer_id' => $request->customer_id,

@@ -5,10 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Dispatch extends Model
+use OwenIt\Auditing\Contracts\Auditable;
+
+class Dispatch extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+
     protected $fillable = [
-        'job_issue_id', 'dispatch_date', 'qty_dispatched', 'vehicle_no', 'notes'
+        'job_issue_id', 'dc_number', 'dispatch_date', 'qty_dispatched', 'vehicle_no', 'notes'
     ];
 
     public function jobIssue()

@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\CartonType;
 use App\Models\Ink;
 use App\Models\JobNumberSetup;
+use App\Models\Paper;
 use App\Services\DieLine;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -46,7 +47,8 @@ class JobCardController extends Controller
         $customers = Customer::all();
         $cartonTypes = CartonType::all();
         $inks = Ink::all();
-        return view('job_cards.create', compact('customers', 'cartonTypes', 'inks'));
+        $papers = Paper::all();
+        return view('job_cards.create', compact('customers', 'cartonTypes', 'inks', 'papers'));
     }
 
     public function store(Request $request)
@@ -70,6 +72,7 @@ class JobCardController extends Controller
                 'carton_type_id' => $request->carton_type_id,
                 'item_name' => $request->item_name,
                 'item_code' => $request->item_code,
+                'uom' => $request->uom,
                 'length' => $request->length,
                 'width' => $request->width,
                 'height' => $request->height,
@@ -122,7 +125,8 @@ class JobCardController extends Controller
         $customers = Customer::all();
         $cartonTypes = CartonType::all();
         $inks = Ink::all();
-        return view('job_cards.edit', compact('jobCard', 'customers', 'cartonTypes', 'inks'));
+        $papers = Paper::all();
+        return view('job_cards.edit', compact('jobCard', 'customers', 'cartonTypes', 'inks', 'papers'));
     }
 
     public function update(Request $request, $id)
@@ -143,6 +147,7 @@ class JobCardController extends Controller
                 'carton_type_id' => $request->carton_type_id,
                 'item_name' => $request->item_name,
                 'item_code' => $request->item_code,
+                'uom' => $request->uom,
                 'length' => $request->length,
                 'width' => $request->width,
                 'height' => $request->height,
@@ -208,6 +213,7 @@ class JobCardController extends Controller
             'length' => 'required|numeric|min:1',
             'width' => 'required|numeric|min:1',
             'height' => 'required|numeric|min:1',
+            'item_name' => 'nullable|string',
             'fefco_code' => 'nullable|string',
         ]);
 
@@ -216,7 +222,8 @@ class JobCardController extends Controller
             $request->length,
             $request->width,
             $request->height,
-            $request->fefco_code ?? '0201'
+            $request->fefco_code ?? '0201',
+            $request->item_name ?? ''
         );
 
         return response()->json([

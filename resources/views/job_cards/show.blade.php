@@ -50,15 +50,20 @@
             <div class="row">
                 <div class="col-md-3">
                     <label class="text-muted">Dimensions (L x W x H)</label>
-                    <p class="font-weight-bold">{{ $jobCard->length }} x {{ $jobCard->width }} x {{ $jobCard->height }} mm</p>
+                    <p class="font-weight-bold">
+                        {{ ($jobCard->uom == 'mm' ? number_format($jobCard->length, 0) : number_format($jobCard->length, 2)) }} x 
+                        {{ ($jobCard->uom == 'mm' ? number_format($jobCard->width, 0) : number_format($jobCard->width, 2)) }} x 
+                        {{ ($jobCard->uom == 'mm' ? number_format($jobCard->height, 0) : number_format($jobCard->height, 2)) }} 
+                        {{ $jobCard->uom }}
+                    </p>
                 </div>
                 <div class="col-md-3">
                     <label class="text-muted">Deckle Size</label>
-                    <p class="font-weight-bold">{{ $jobCard->deckle_size }} mm</p>
+                    <p class="font-weight-bold">{{ $jobCard->deckle_size }} Inch</p>
                 </div>
                 <div class="col-md-3">
                     <label class="text-muted">Sheet Length</label>
-                    <p class="font-weight-bold">{{ $jobCard->sheet_length }} inch</p>
+                    <p class="font-weight-bold">{{ $jobCard->sheet_length }} Inch</p>
                 </div>
                 <div class="col-md-3">
                     <label class="text-muted">UPS</label>

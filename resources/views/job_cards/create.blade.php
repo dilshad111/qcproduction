@@ -56,15 +56,23 @@
 
                 <div class="row">
                     <div class="col-md-3 mb-3">
-                        <label>Inner Length (mm)</label>
+                        <label>Scale (UOM)</label>
+                        <select name="uom" id="uom" class="form-control" onchange="updateCalculations()">
+                            <option value="mm" {{ old('uom') == 'mm' ? 'selected' : '' }}>MM</option>
+                            <option value="inch" {{ old('uom') == 'inch' ? 'selected' : '' }}>Inch</option>
+                            <option value="cm" {{ old('uom') == 'cm' ? 'selected' : '' }}>CM</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label>Inner Length</label>
                         <input type="number" step="0.01" name="length" id="dimension_length" class="form-control" value="{{ old('length') }}">
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label>Inner Width (mm)</label>
+                        <label>Inner Width</label>
                         <input type="number" step="0.01" name="width" id="dimension_width" class="form-control" value="{{ old('width') }}">
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label>Inner Height (mm)</label>
+                        <label>Inner Height</label>
                         <input type="number" step="0.01" name="height" id="dimension_height" class="form-control" value="{{ old('height') }}">
                     </div>
                     <div class="col-md-3 mb-3">
@@ -90,11 +98,11 @@
 
                 <div class="row">
                    <div class="col-md-4 mb-3">
-                        <label>Deckle Size (mm/inch)</label>
+                        <label>Deckle Size (Inch)</label>
                         <input type="number" step="0.01" name="deckle_size" class="form-control" value="{{ old('deckle_size') }}">
                    </div>
                    <div class="col-md-4 mb-3">
-                        <label>Sheet Length (inch)</label>
+                        <label>Sheet Length (Inch)</label>
                         <input type="number" step="0.01" name="sheet_length" class="form-control" value="{{ old('sheet_length') }}">
                    </div>
                    <div class="col-md-4 mb-3">
@@ -241,23 +249,71 @@
 </div>
 
 <script>
+    // Pass PHP data to JS
+    const inks = @json($inks);
+    const papers = @json($papers);
+
 // Calculate Deckle Size and Sheet Length
 function updateCalculations() {
-    const length = parseFloat(document.getElementById('length').value) || 0;
-    const width = parseFloat(document.getElementById('width').value) || 0;
-    const height = parseFloat(document.getElementById('height').value) || 0;
-    // Deckle Size Inch = (W + H) + 25
-    const deckle = (width + height) + 25;
-    // Sheet Length Inch = (L + L + W + W + 75)
-    const sheet = (length * 2) + (width * 2) + 75;
-    document.getElementById('deckle_size_calc').value = deckle.toFixed(2);
-    document.getElementById('sheet_length_calc').value = sheet.toFixed(2);
+    let length = parseFloat(document.getElementById('dimension_length').value) || 0;
+    let width = parseFloat(document.getElementById('dimension_width').value) || 0;
+    let height = parseFloat(document.getElementById('dimension_height').value) || 0;
+    const uom = document.getElementById('uom').value;
+
+    // Convert to inches for calculation logic if needed, but the formula given was (W+H)+25. 
+    // Assuming the "25" and "75" constants were originally for MM.
+    // If the user wants the Output in INCH, and the constants are for MM, we need to be careful.
+    // However, usually in MM based plants, Deckle is MM. But user specifically asked "Deckle Size (mm/inch) should be Deckle Size (inch)".
+    // And "Deckle Size Inch and Sheet Length Inch dynamically calculated as per scale uom".
+    
+    // Let's standardise everything to MM first, then apply formula, then convert to Inch.
+    // OR if the formula (W+H)+25 is meant for MM inputs resulting in MM outputs.
+
+    // Let's assume the previous formula was for MM inputs:
+    // Deckle (mm) = (W + H) + 25 (allowance)
+    // Sheet Length (mm) = (L*2) + (W*2) + 75 (allowance)
+    
+    // Convert inputs to MM first
+    let l_mm = length;
+    let w_mm = width;
+    let h_mm = height;
+
+    if (uom === 'inch') {
+        l_mm = length * 25.4;
+        w_mm = width * 25.4;
+        h_mm = height * 25.4;
+    } else if (uom === 'cm') {
+        l_mm = length * 10;
+        w_mm = width * 10;
+        h_mm = height * 10;
+    }
+
+    // Calculate dimensions in MM (assuming standard allowances are in MM: 25mm and 75mm)
+    // Deckle = Width + Height + 25mm (trim/allowance)
+    const deckle_mm = (w_mm + h_mm) + 25;
+    
+    // Sheet Length = (L x 2) + (W x 2) + 75mm (joint/allowance)
+    const sheet_length_mm = (l_mm * 2) + (w_mm * 2) + 75;
+
+    // Convert Final Results to INCH
+    const deckle_inch = deckle_mm / 25.4;
+    const sheet_length_inch = sheet_length_mm / 25.4;
+
+    document.getElementById('deckle_size_calc').value = deckle_inch.toFixed(2);
+    document.getElementById('sheet_length_calc').value = sheet_length_inch.toFixed(2);
+
+    // Also update the hidden/actual fields if they are empty or user hasn't manually edited them (optional enhancement)
+    // For now, let's just update the visible calculated fields as requested.
 }
 
-// Attach event listeners to dimension inputs
-document.getElementById('length').addEventListener('input', updateCalculations);
-document.getElementById('width').addEventListener('input', updateCalculations);
-document.getElementById('height').addEventListener('input', updateCalculations);
+document.getElementById('uom').addEventListener('change', updateCalculations);
+document.getElementById('dimension_length').addEventListener('input', updateCalculations);
+document.getElementById('dimension_width').addEventListener('input', updateCalculations);
+document.getElementById('dimension_height').addEventListener('input', updateCalculations);
+
+// Initial calculation on page load
+// updateCalculations(); // moved to end of script
+
 
 // Initial calculation on page load
 updateCalculations();
@@ -318,6 +374,11 @@ function renderLayers() {
             `;
         }
 
+        let paperOptions = '<option value="">Select Paper</option>';
+        papers.forEach(p => {
+             paperOptions += `<option value="${p.name}" data-gsm="${p.gsm}">${p.name} (${p.gsm} GSM)</option>`;
+        });
+
         let html = `
             <div class="row mb-2 border-bottom pb-2">
                 <div class="col-md-3">
@@ -326,17 +387,25 @@ function renderLayers() {
                 </div>
                 <div class="col-md-4">
                     <label>Paper Name</label>
-                    <input type="text" name="layers[${index}][paper_name]" class="form-control" required>
+                    <select name="layers[${index}][paper_name]" class="form-control paper-select" required onchange="updateGSM(this, ${index})">
+                        ${paperOptions}
+                    </select>
                 </div>
                 <div class="col-md-2">
                     <label>GSM</label>
-                    <input type="number" name="layers[${index}][gsm]" class="form-control" required>
+                    <input type="number" name="layers[${index}][gsm]" id="gsm_${index}" class="form-control" required readonly>
                 </div>
                 ${fluteOptions}
             </div>
         `;
         container.insertAdjacentHTML('beforeend', html);
     });
+}
+
+function updateGSM(select, index) {
+    const option = select.options[select.selectedIndex];
+    const gsm = option.getAttribute('data-gsm');
+    document.getElementById(`gsm_${index}`).value = gsm || '';
 }
 
 function renderInkFields() {
@@ -376,6 +445,7 @@ function generateDieLine() {
     const length = document.getElementById('dimension_length').value;
     const width = document.getElementById('dimension_width').value;
     const height = document.getElementById('dimension_height').value;
+    const itemName = document.querySelector('input[name="item_name"]').value;
     const cartonTypeSelect = document.querySelector('select[name="carton_type_id"]');
     const selectedOption = cartonTypeSelect.options[cartonTypeSelect.selectedIndex];
     const fefcoCode = selectedOption ? selectedOption.text.match(/\(([^)]+)\)/)?.[1] : '0201';
@@ -404,6 +474,7 @@ function generateDieLine() {
             length: parseFloat(length),
             width: parseFloat(width),
             height: parseFloat(height),
+            item_name: itemName,
             fefco_code: fefcoCode || '0201'
         })
     })

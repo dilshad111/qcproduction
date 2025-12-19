@@ -7,6 +7,9 @@ use App\Models\Ink;
 use App\Models\CartonType;
 use App\Models\MachineSpeed;
 use App\Models\JobNumberSetup;
+use App\Models\Paper;
+use App\Models\Machine;
+use App\Models\Staff;
 
 class MastersController extends Controller
 {
@@ -14,10 +17,13 @@ class MastersController extends Controller
     {
         $inks = Ink::all();
         $cartonTypes = CartonType::all();
+        $papers = Paper::all();
+        $machines = Machine::all();
+        $staffs = Staff::all(); // Or filter by valid roles
         $machineSpeed = MachineSpeed::firstOrCreate([], ['speed_3ply' => 0, 'speed_5ply' => 0]);
         $jobNumberSetup = JobNumberSetup::firstOrCreate([], ['prefix' => 'JC-', 'current_number' => 0, 'padding' => 5]);
         
-        return view('masters.index', compact('inks', 'cartonTypes', 'machineSpeed', 'jobNumberSetup'));
+        return view('masters.index', compact('inks', 'cartonTypes', 'papers', 'machines', 'staffs', 'machineSpeed', 'jobNumberSetup'));
     }
 
     public function storeInk(Request $request)
@@ -66,5 +72,44 @@ class MastersController extends Controller
         } else {
             return back()->with('error', 'Invalid job number format. Please use format like "JC-QC-00001".');
         }
+    }
+
+    public function storePaper(Request $request)
+    {
+        $request->validate(['name' => 'required', 'gsm' => 'required|integer']);
+        Paper::create($request->all());
+        return back()->with('success', 'Paper added successfully.');
+    }
+
+    public function destroyPaper(Paper $paper)
+    {
+        $paper->delete();
+        return back()->with('success', 'Paper deleted.');
+    }
+
+    public function storeMachine(Request $request)
+    {
+        $request->validate(['name' => 'required', 'type' => 'required']);
+        Machine::create($request->all());
+        return back()->with('success', 'Machine added.');
+    }
+
+    public function destroyMachine(Machine $machine)
+    {
+        $machine->delete();
+        return back()->with('success', 'Machine deleted.');
+    }
+
+    public function storeStaff(Request $request)
+    {
+        $request->validate(['name' => 'required', 'role' => 'required']);
+        Staff::create($request->all());
+        return back()->with('success', 'Staff Member added.');
+    }
+
+    public function destroyStaff(Staff $staff)
+    {
+        $staff->delete();
+        return back()->with('success', 'Staff Member deleted.');
     }
 }

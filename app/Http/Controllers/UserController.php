@@ -48,6 +48,7 @@ class UserController extends Controller
     {
         $permissions = [
             'menu_access' => $request->menu_access ?? [],
+            'submenu_access' => $request->submenu_access ?? [],
             'can_edit' => $request->has('can_edit'),
             'can_delete' => $request->has('can_delete'),
             'view_amounts' => $request->has('view_amounts'),
@@ -65,5 +66,34 @@ class UserController extends Controller
             $user->update(['theme' => $request->theme]);
         }
         return back();
+    }
+
+    public function editProfile()
+    {
+        $user = auth()->user();
+        return view('users.profile', compact('user'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = auth()->user();
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|confirmed|min:6',
+        ]);
+
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+        ];
+
+        if ($request->password) {
+            $data['password'] = Hash::make($request->password);
+        }
+
+        $user->update($data);
+
+        return back()->with('success', 'Profile updated successfully.');
     }
 }

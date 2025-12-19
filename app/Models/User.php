@@ -8,9 +8,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+use OwenIt\Auditing\Contracts\Auditable;
+
+class User extends Authenticatable implements Auditable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, \OwenIt\Auditing\Auditable;
 
     /**
      * The attributes that are mass assignable.
@@ -63,5 +65,12 @@ class User extends Authenticatable
         
         $menuAccess = $this->permissions['menu_access'] ?? [];
         return in_array($menuName, $menuAccess);
+    }
+
+    public function canViewSubmenu($submenuName) {
+        if ($this->isAdmin()) return true;
+        
+        $submenuAccess = $this->permissions['submenu_access'] ?? [];
+        return in_array($submenuName, $submenuAccess);
     }
 }

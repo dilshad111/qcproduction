@@ -187,10 +187,15 @@
                 <div class="section-title">Instruction for Corrugation Plant</div>
                 <div class="p-2">
                     <div class="info-item">
-                        <span class="info-label">Size (L x W x H):</span>
-                        <span class="info-value font-weight-bold">{{ $jobCard->length }} x {{ $jobCard->width }} x {{ $jobCard->height }} mm</span>
+                        <span class="info-label">Size (Inner):</span>
+                        <span class="info-value font-weight-bold">
+                            {{ ($jobCard->uom == 'mm' ? number_format($jobCard->length, 0) : number_format($jobCard->length, 2)) }} x 
+                            {{ ($jobCard->uom == 'mm' ? number_format($jobCard->width, 0) : number_format($jobCard->width, 2)) }} x 
+                            {{ ($jobCard->uom == 'mm' ? number_format($jobCard->height, 0) : number_format($jobCard->height, 2)) }} 
+                            {{ $jobCard->uom }}
+                        </span>
                     </div>
-                     <!-- Tolerances -->
+                    <!-- Tolerances -->
                     @php
                         $tolerance = ($jobCard->ply_type == 5) ? 5 : 3;
                     @endphp
@@ -207,7 +212,7 @@
 
                     <div class="info-item mt-2">
                         <span class="info-label">Deckle Size:</span>
-                        <span class="info-value font-weight-bold">{{ $jobCard->deckle_size }} mm</span>
+                        <span class="info-value font-weight-bold">{{ $jobCard->deckle_size }} Inch</span>
                     </div>
                     <div class="info-item">
                         <span class="info-label">Sheet Length:</span>

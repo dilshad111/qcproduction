@@ -4,7 +4,7 @@
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Customers</h2>
-        <a href="{{ route('customers.create') }}" class="btn btn-primary">Add New Customer</a>
+        <a href="{{ route('customers.create') }}" class="btn btn-primary shadow-sm"><i class="fas fa-plus-circle"></i> Add New Customer</a>
     </div>
 
     @if(session('success'))
@@ -31,11 +31,11 @@
                         <td>{{ $customer->email }}</td>
                         <td>{{ $customer->gst_no }}</td>
                         <td>
-                            <a href="{{ route('customers.edit', $customer->id) }}" class="btn btn-sm btn-info">Edit</a>
+                            <a href="{{ route('customers.edit', $customer->id) }}" class="btn btn-sm btn-info shadow-sm text-white"><i class="fas fa-edit"></i> Edit</a>
                             <form action="{{ route('customers.destroy', $customer->id) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                                <button type="submit" class="btn btn-sm btn-danger shadow-sm" onclick="return confirm('Are you sure?')"><i class="fas fa-trash-alt"></i> Delete</button>
                             </form>
                         </td>
                     </tr>

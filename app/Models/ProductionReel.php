@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProductionReel extends Model
 {
     protected $fillable = [
-        'job_issue_id', 'reel_number', 'weight'
+        'job_issue_id', 'reel_number', 'usage_type', 'weight'
     ];
 
     public function jobIssue()

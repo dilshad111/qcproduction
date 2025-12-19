@@ -5,10 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class JobCard extends Model
+use OwenIt\Auditing\Contracts\Auditable;
+
+class JobCard extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+
     protected $fillable = [
-        'job_no', 'customer_id', 'carton_type_id', 'item_name', 'item_code',
+        'job_no', 'customer_id', 'carton_type_id', 'item_name', 'item_code', 'uom',
         'length', 'width', 'height', 'deckle_size', 'sheet_length', 'ups',
         'ply_type', 'slitting_creasing', 'print_colors', 'printing_data', 'pasting_type',
         'staple_details', 'special_details', 'process_type', 'packing_bundle_qty', 'remarks'

@@ -11,9 +11,10 @@ class DieLine
      * @param float $width Width in mm
      * @param float $height Height in mm
      * @param string $fefcoCode FEFCO standard code
+     * @param string $itemName Item Name string
      * @return string SVG markup
      */
-    public function generateSVG($length, $width, $height, $fefcoCode = '0201')
+    public function generateSVG($length, $width, $height, $fefcoCode = '0201', $itemName = '')
     {
         // Constants
         $glueFlap = 35; // Fixed glue flap width in mm
@@ -29,7 +30,16 @@ class DieLine
         // Scaling to fit ~800px width
         $scale = 800 / $totalWidth;
         $viewBoxWidth  = $totalWidth * $scale;
-        $viewBoxHeight = $totalHeight * $scale;
+        
+        // Gap requirement: 50mm above dimension arrow
+        $textGapMM = 50;
+        $arrowOffset = 20; // Arrow is 20 units above drawing
+        
+        // Calculate required Title Height to fit: ArrowOffset + Gap + FontHeight buffer
+        $requiredTitleSpace = $arrowOffset + ($textGapMM * $scale) + 30; // 30px buffer for text itself
+        $titleHeight = max(100, $requiredTitleSpace); // Minimum 100 or required
+        
+        $viewBoxHeight = ($totalHeight * $scale) + $titleHeight;
 
         // Padding for labels and arrows
         $padding = 60;
@@ -38,7 +48,7 @@ class DieLine
 
         // Starting point (with padding)
         $startX = $padding;
-        $startY = $padding + ($flap1 * $scale);
+        $startY = $padding + ($flap1 * $scale) + $titleHeight; // Shift down by titleHeight
 
         // Begin SVG
         $svg = '<?xml version="1.0" encoding="UTF-8"?>';
@@ -56,7 +66,7 @@ class DieLine
             '.dieline { stroke: black; stroke-width: 1.5; fill: none; }' .
             '.arrow { stroke: #333; stroke-width: 1.5; fill: none; }' .
             '.label { font-family: Arial, sans-serif; font-size: 12px; fill: #333; }' .
-            '.label-bold { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #000; }' .
+            '.label-bold { font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; fill: #000; }' . // Increased font size for title
             '</style>' .
             '<marker id="arrowhead" markerWidth="10" markerHeight="10" refX="0" refY="5" orient="auto">' .
             '<polygon points="0 0,10 5,0 10" fill="#333"/>' .
@@ -65,6 +75,28 @@ class DieLine
             '<polygon points="10 0,0 5,10 10" fill="#333"/>' .
             '</marker>' .
             '</defs>';
+
+        // Title: Item Name and Carton Size
+        // Calculation: $textGapMM above the top-most dimension arrow
+        // Top flaps start at $flapY = $padding + $titleHeight
+        // Top dimension arrow is at $lengthY = $flapY - $arrowOffset
+        
+        $flapY = $padding + $titleHeight;
+        $topArrowY = $flapY - $arrowOffset;
+        $textGapPixels = $textGapMM * $scale;
+        
+        $centerX = $canvasWidth / 2;
+        $titleY = $topArrowY - $textGapPixels;
+        
+        $svg .= sprintf(
+            '<text x="%f" y="%f" text-anchor="middle" class="label-bold">Carton Size: %s x %s x %s mm | Item Name: %s</text>',
+            $centerX,
+            $titleY,
+            htmlspecialchars($length),
+            htmlspecialchars($width),
+            htmlspecialchars($height),
+            htmlspecialchars($itemName)
+        );
 
         // Panel definitions (order of panels around the body)
         $panels = [

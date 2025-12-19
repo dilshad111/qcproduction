@@ -57,6 +57,14 @@
 
                 <div class="row">
                     <div class="col-md-3 mb-3">
+                        <label>Scale (UOM)</label>
+                        <select name="uom" id="uom" class="form-control" onchange="updateCalculations()">
+                            <option value="mm" {{ old('uom', $jobCard->uom) == 'mm' ? 'selected' : '' }}>MM</option>
+                            <option value="inch" {{ old('uom', $jobCard->uom) == 'inch' ? 'selected' : '' }}>Inch</option>
+                            <option value="cm" {{ old('uom', $jobCard->uom) == 'cm' ? 'selected' : '' }}>CM</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-3">
                         <label>Inner Length (mm)</label>
                         <input type="number" step="0.01" name="length" id="dimension_length" class="form-control" value="{{ old('length', $jobCard->length) }}">
                     </div>
@@ -246,16 +254,40 @@
     const existingPrintingData = @json($jobCard->printing_data);
 
     // Calculate Deckle Size and Sheet Length
+    // Calculate Deckle Size and Sheet Length
     function updateCalculations() {
         const length = parseFloat(document.getElementById('dimension_length').value) || 0;
         const width = parseFloat(document.getElementById('dimension_width').value) || 0;
         const height = parseFloat(document.getElementById('dimension_height').value) || 0;
-        // Deckle = (W + H) + 25
-        const deckle = (width + height) + 25;
-        // Sheet = (L + L + W + W + 75)
-        const sheet = (length * 2) + (width * 2) + 75;
-        document.getElementById('deckle_size_calc').value = deckle.toFixed(2);
-        document.getElementById('sheet_length_calc').value = sheet.toFixed(2);
+        const uom = document.getElementById('uom').value;
+
+        // Convert inputs to MM first
+        let l_mm = length;
+        let w_mm = width;
+        let h_mm = height;
+
+        if (uom === 'inch') {
+            l_mm = length * 25.4;
+            w_mm = width * 25.4;
+            h_mm = height * 25.4;
+        } else if (uom === 'cm') {
+            l_mm = length * 10;
+            w_mm = width * 10;
+            h_mm = height * 10;
+        }
+
+        // Calculate dimensions in MM (assuming standard allowances are in MM)
+        // Deckle = Width + Height + 25mm
+        const deckle_mm = (w_mm + h_mm) + 25;
+        // Sheet = (L*2) + (W*2) + 75mm
+        const sheet_length_mm = (l_mm * 2) + (w_mm * 2) + 75;
+
+        // Convert Final Results to INCH
+        const deckle_inch = deckle_mm / 25.4;
+        const sheet_length_inch = sheet_length_mm / 25.4;
+
+        document.getElementById('deckle_size_calc').value = deckle_inch.toFixed(2);
+        document.getElementById('sheet_length_calc').value = sheet_length_inch.toFixed(2);
     }
 
     document.getElementById('dimension_length').addEventListener('input', updateCalculations);
@@ -429,6 +461,8 @@
         document.getElementById('dieline-loading').style.display = 'block';
         document.getElementById('dieline-container').innerHTML = '';
 
+        const itemName = document.querySelector('input[name="item_name"]').value;
+
         fetch('{{ route("job-cards.generate-dieline") }}', {
             method: 'POST',
             headers: {
@@ -439,6 +473,7 @@
                 length: parseFloat(length),
                 width: parseFloat(width),
                 height: parseFloat(height),
+                item_name: itemName,
                 fefco_code: fefcoCode || '0201'
             })
         })

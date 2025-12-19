@@ -5,8 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class JobIssue extends Model
+use OwenIt\Auditing\Contracts\Auditable;
+
+class JobIssue extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+
     protected $fillable = [
         'job_card_id', 'customer_id', 'po_number', 'order_qty_cartons',
         'required_sheet_qty', 'status'
@@ -35,5 +39,10 @@ class JobIssue extends Model
     public function dispatches()
     {
         return $this->hasMany(Dispatch::class);
+    }
+
+    public function inventoryLogs()
+    {
+        return $this->hasMany(InventoryLog::class);
     }
 }

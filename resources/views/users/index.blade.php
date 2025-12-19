@@ -7,7 +7,7 @@
             <h2>Users</h2>
         </div>
         <div class="col-md-6 text-end">
-            <a href="{{ route('users.create') }}" class="btn btn-primary">Create User</a>
+            <a href="{{ route('users.create') }}" class="btn btn-primary shadow-sm"><i class="fas fa-user-plus"></i> Create User</a>
         </div>
     </div>
 
@@ -31,7 +31,7 @@
                 <td>{{ $user->email }}</td>
                 <td>{{ ucfirst($user->role) }}</td>
                 <td>
-                    <a href="{{ route('users.rights', $user) }}" class="btn btn-sm btn-info text-white">Rights</a>
+                    <a href="{{ route('users.rights', $user) }}" class="btn btn-sm btn-info text-white shadow-sm"><i class="fas fa-key"></i> Rights</a>
                     <!-- Add Edit/Delete later if needed -->
                 </td>
             </tr>

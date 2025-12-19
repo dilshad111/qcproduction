@@ -4,12 +4,12 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="text-center mb-4">
+            <div class="d-flex align-items-center justify-content-center mb-4">
                 @if(isset($company) && $company->logo_path)
-                    <img src="{{ asset('storage/' . $company->logo_path) }}" alt="{{ $company->name }}" style="max-height: 80px;" class="mb-2">
+                    <img src="{{ asset('storage/' . $company->logo_path) }}" alt="{{ $company->name }}" style="max-height: 50px;" class="me-3">
                 @endif
                 @if(isset($company))
-                    <h3>{{ $company->name }}</h3>
+                    <h3 class="mb-0">{{ $company->name }}</h3>
                 @endif
             </div>
             <div class="card">

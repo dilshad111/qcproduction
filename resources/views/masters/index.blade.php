@@ -10,16 +10,25 @@
 
     <ul class="nav nav-tabs mb-3" id="mastersTab" role="tablist">
         <li class="nav-item">
-            <button class="nav-link active" id="inks-tab" data-bs-toggle="tab" data-bs-target="#inks" type="button">Inks</button>
+            <button class="nav-link active" id="inks-tab" data-bs-toggle="tab" data-bs-target="#inks" type="button"><i class="fas fa-fill-drip"></i> Inks</button>
         </li>
         <li class="nav-item">
-            <button class="nav-link" id="carton-tab" data-bs-toggle="tab" data-bs-target="#carton" type="button">Carton Types</button>
+            <button class="nav-link" id="carton-tab" data-bs-toggle="tab" data-bs-target="#carton" type="button"><i class="fas fa-box-open"></i> Carton Types</button>
         </li>
         <li class="nav-item">
-            <button class="nav-link" id="speed-tab" data-bs-toggle="tab" data-bs-target="#speed" type="button">Machine Speed</button>
+            <button class="nav-link" id="speed-tab" data-bs-toggle="tab" data-bs-target="#speed" type="button"><i class="fas fa-gauge-high"></i> Machine Speed</button>
         </li>
         <li class="nav-item">
-            <button class="nav-link" id="jobnumber-tab" data-bs-toggle="tab" data-bs-target="#jobnumber" type="button">Job Number Setup</button>
+            <button class="nav-link" id="jobnumber-tab" data-bs-toggle="tab" data-bs-target="#jobnumber" type="button"><i class="fas fa-hashtag"></i> Job Number Setup</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" id="papers-tab" data-bs-toggle="tab" data-bs-target="#papers" type="button"><i class="fas fa-scroll"></i> Paper Stocks</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" id="machines-tab" data-bs-toggle="tab" data-bs-target="#machines" type="button"><i class="fas fa-cogs"></i> Machines</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" id="staffs-tab" data-bs-toggle="tab" data-bs-target="#staffs" type="button"><i class="fas fa-users"></i> Staff/Operators</button>
         </li>
     </ul>
 
@@ -41,7 +50,7 @@
                                     <label>Color Code</label>
                                     <input type="text" name="color_code" class="form-control">
                                 </div>
-                                <button type="submit" class="btn btn-primary">Add Ink</button>
+                                <button type="submit" class="btn btn-primary shadow-sm"><i class="fas fa-plus-circle"></i> Add Ink</button>
                             </form>
                         </div>
                     </div>
@@ -64,7 +73,7 @@
                                     <form action="{{ route('masters.ink.destroy', $ink->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn btn-sm btn-danger" onclick="return confirm('Delete?')">Delete</button>
+                                        <button class="btn btn-sm btn-danger shadow-sm" onclick="return confirm('Delete?')"><i class="fas fa-trash-can"></i></button>
                                     </form>
                                 </td>
                             </tr>
@@ -92,7 +101,7 @@
                                     <label>Standard Code (FEFCO)</label>
                                     <input type="text" name="standard_code" class="form-control">
                                 </div>
-                                <button type="submit" class="btn btn-primary">Add Type</button>
+                                <button type="submit" class="btn btn-primary shadow-sm"><i class="fas fa-plus-circle"></i> Add Type</button>
                             </form>
                         </div>
                     </div>
@@ -115,7 +124,7 @@
                                     <form action="{{ route('masters.carton-type.destroy', $type->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn btn-sm btn-danger" onclick="return confirm('Delete?')">Delete</button>
+                                        <button class="btn btn-sm btn-danger shadow-sm" onclick="return confirm('Delete?')"><i class="fas fa-trash-can"></i></button>
                                     </form>
                                 </td>
                             </tr>
@@ -141,7 +150,7 @@
                             <label>5-Ply Machine Speed</label>
                             <input type="number" name="speed_5ply" class="form-control" value="{{ $machineSpeed->speed_5ply }}">
                         </div>
-                        <button type="submit" class="btn btn-primary">Update Speeds</button>
+                        <button type="submit" class="btn btn-primary shadow-sm"><i class="fas fa-save"></i> Update Speeds</button>
                     </form>
                 </div>
              </div>
@@ -177,10 +186,178 @@
                                 <strong>Padding:</strong> {{ $jobNumberSetup->padding }} digits
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary">Update Job Number Setup</button>
+                        <button type="submit" class="btn btn-primary shadow-sm"><i class="fas fa-save"></i> Update Setup</button>
                     </form>
                 </div>
              </div>
+        </div>
+        
+        <!-- PAPERS TAB -->
+        <div class="tab-pane fade" id="papers">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">Add New Paper</div>
+                        <div class="card-body">
+                            <form action="{{ route('masters.paper.store') }}" method="POST">
+                                @csrf
+                                <div class="mb-3">
+                                    <label>Paper Name</label>
+                                    <input type="text" name="name" class="form-control" required placeholder="e.g. Kraft">
+                                </div>
+                                <div class="mb-3">
+                                    <label>GSM</label>
+                                    <input type="number" name="gsm" class="form-control" required placeholder="e.g. 150">
+                                </div>
+                                <button type="submit" class="btn btn-primary shadow-sm"><i class="fas fa-plus-circle"></i> Add Paper</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <table class="table table-bordered bg-white">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>GSM</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($papers as $paper)
+                            <tr>
+                                <td>{{ $paper->name }}</td>
+                                <td>{{ $paper->gsm }}</td>
+                                <td>
+                                    <form action="{{ route('masters.paper.destroy', $paper->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-sm btn-danger shadow-sm" onclick="return confirm('Delete?')"><i class="fas fa-trash-can"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- MACHINES TAB -->
+        <div class="tab-pane fade" id="machines">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">Add New Machine</div>
+                        <div class="card-body">
+                            <form action="{{ route('masters.machine.store') }}" method="POST">
+                                @csrf
+                                <div class="mb-3">
+                                    <label>Machine Name</label>
+                                    <input type="text" name="name" class="form-control" required placeholder="e.g. Printer A">
+                                </div>
+                                <div class="mb-3">
+                                    <label>Type</label>
+                                    <select name="type" class="form-control">
+                                        <option value="Printer">Printer</option>
+                                        <option value="Die Cutter">Die Cutter</option>
+                                        <option value="Rotary Slotter">Rotary Slotter</option>
+                                        <option value="Gluer">Gluer</option>
+                                        <option value="Stapler">Stapler</option>
+                                        <option value="Corrugator">Corrugator</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary shadow-sm"><i class="fas fa-plus-circle"></i> Add Machine</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <table class="table table-bordered bg-white">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($machines as $machine)
+                            <tr>
+                                <td>{{ $machine->name }}</td>
+                                <td>{{ $machine->type }}</td>
+                                <td>{{ $machine->status ? 'Active' : 'Inactive' }}</td>
+                                <td>
+                                    <form action="{{ route('masters.machine.destroy', $machine->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-sm btn-danger shadow-sm" onclick="return confirm('Delete?')"><i class="fas fa-trash-can"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- STAFF TAB -->
+        <div class="tab-pane fade" id="staffs">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">Add New Staff</div>
+                        <div class="card-body">
+                            <form action="{{ route('masters.staff.store') }}" method="POST">
+                                @csrf
+                                <div class="mb-3">
+                                    <label>Name</label>
+                                    <input type="text" name="name" class="form-control" required placeholder="e.g. John Doe">
+                                </div>
+                                <div class="mb-3">
+                                    <label>Role</label>
+                                    <select name="role" class="form-control">
+                                        <option value="Machine Operator">Machine Operator</option>
+                                        <option value="Helper">Helper</option>
+                                        <option value="Supervisor">Supervisor</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary shadow-sm"><i class="fas fa-plus-circle"></i> Add Staff</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <table class="table table-bordered bg-white">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($staffs as $staff)
+                            <tr>
+                                <td>{{ $staff->name }}</td>
+                                <td>{{ $staff->role }}</td>
+                                <td>{{ $staff->status ? 'Active' : 'Inactive' }}</td>
+                                <td>
+                                    <form action="{{ route('masters.staff.destroy', $staff->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-sm btn-danger shadow-sm" onclick="return confirm('Delete?')"><i class="fas fa-trash-can"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>

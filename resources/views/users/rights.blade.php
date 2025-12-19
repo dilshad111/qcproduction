@@ -28,6 +28,34 @@
                                 <input class="form-check-input" type="checkbox" name="menu_access[]" value="production" id="menu_production" {{ $user->canViewMenu('production') ? 'checked' : '' }}>
                                 <label class="form-check-label" for="menu_production">Production</label>
                             </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="menu_access[]" value="audit_logs" id="menu_audit_logs" {{ $user->canViewMenu('audit_logs') ? 'checked' : '' }}>
+                                <label class="form-check-label" for="menu_audit_logs">Audit Logs</label>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <h5>Submenu Access</h5>
+                        <div class="mb-3">
+                            <h6>Masters Submenus</h6>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="submenu_access[]" value="inks" id="sub_inks" {{ $user->canViewSubmenu('inks') ? 'checked' : '' }}>
+                                <label class="form-check-label" for="sub_inks">Inks</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="submenu_access[]" value="carton_types" id="sub_carton_types" {{ $user->canViewSubmenu('carton_types') ? 'checked' : '' }}>
+                                <label class="form-check-label" for="sub_carton_types">Carton Types</label>
+                            </div>
+                            
+                            <h6 class="mt-2">Production Submenus</h6>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="submenu_access[]" value="reels" id="sub_reels" {{ $user->canViewSubmenu('reels') ? 'checked' : '' }}>
+                                <label class="form-check-label" for="sub_reels">Reel Consumption</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="submenu_access[]" value="dispatch" id="sub_dispatch" {{ $user->canViewSubmenu('dispatch') ? 'checked' : '' }}>
+                                <label class="form-check-label" for="sub_dispatch">Dispatch</label>
+                            </div>
                         </div>
 
                         <hr>
