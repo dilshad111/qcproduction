@@ -27,4 +27,9 @@ class CorrugationLog extends Model
     {
         return $this->hasMany(WastageLog::class);
     }
+
+    public function timeSessions()
+    {
+        return $this->hasMany(CorrugationTimeSession::class);
+    }
 }

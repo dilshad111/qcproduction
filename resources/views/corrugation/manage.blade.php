@@ -71,6 +71,54 @@
                             <strong>Running Duration:</strong> {{ \Carbon\Carbon::parse($log->start_time)->diffForHumans(null, true) }}
                         </div>
 
+                        <!-- Time Session Management -->
+                        <div class="card mb-3 border-primary">
+                            <div class="card-header bg-primary text-white">
+                                <i class="fas fa-clock"></i> Work Time Sessions
+                            </div>
+                            <div class="card-body">
+                                @php
+                                    $totalSessionTime = $log->timeSessions->sum('duration_minutes');
+                                @endphp
+                                
+                                <button class="btn btn-success w-100 mb-3" data-bs-toggle="modal" data-bs-target="#addTimeSessionModal">
+                                    <i class="fas fa-plus"></i> Add Work Time Session
+                                </button>
+
+                                @if($log->timeSessions->count() > 0)
+                                <h6>Recorded Sessions:</h6>
+                                <table class="table table-sm table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Start</th>
+                                            <th>End</th>
+                                            <th>Duration</th>
+                                            <th>Notes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($log->timeSessions as $session)
+                                        <tr>
+                                            <td>{{ \Carbon\Carbon::parse($session->session_start)->format('d-M h:i A') }}</td>
+                                            <td>{{ $session->session_end ? \Carbon\Carbon::parse($session->session_end)->format('d-M h:i A') : 'Ongoing' }}</td>
+                                            <td>{{ $session->duration_minutes ? $session->duration_minutes . ' min' : '-' }}</td>
+                                            <td><small>{{ $session->notes ?? '-' }}</small></td>
+                                        </tr>
+                                        @endforeach
+                                        <tr class="table-info">
+                                            <th colspan="2">Total Work Time</th>
+                                            <th colspan="2">{{ $totalSessionTime }} minutes ({{ round($totalSessionTime / 60, 1) }} hrs)</th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                @else
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-info-circle"></i> No work sessions recorded yet. Click "Add Work Time Session" to record work periods.
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+
                         <!-- OPERATING CONTROLS -->
                         <div class="row">
                             <div class="col-md-6">
@@ -209,8 +257,85 @@
     </div>
 </div>
 
+<!-- Initial Time Setup Modal (shown on first manage) -->
+@if(isset($needsTimeSetup) && $needsTimeSetup)
+<div class="modal fade" id="initialTimeSetupModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <form action="{{ route('corrugation.time-session.add', $log->id) }}" method="POST">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="fas fa-clock"></i> Set Work Time</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <strong>Important:</strong> Please enter the actual work period times. If the job spans multiple days, you can add additional sessions later.
+                    </div>
+                    <div class="mb-3">
+                        <label>Session Start Time <span class="text-danger">*</span></label>
+                        <input type="datetime-local" name="session_start" class="form-control" required>
+                        <small class="text-muted">When did work actually start?</small>
+                    </div>
+                    <div class="mb-3">
+                        <label>Session End Time <span class="text-danger">*</span></label>
+                        <input type="datetime-local" name="session_end" class="form-control" required>
+                        <small class="text-muted">When did this work period end?</small>
+                    </div>
+                    <div class="mb-3">
+                        <label>Notes (Optional)</label>
+                        <input type="text" name="notes" class="form-control" placeholder="e.g., Day 1 shift, Evening work">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save & Continue</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@endif
+
+<!-- Add Time Session Modal -->
+@if($log && !$log->end_time)
+<div class="modal fade" id="addTimeSessionModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form action="{{ route('corrugation.time-session.add', $log->id) }}" method="POST">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title">Add Time Session</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> <strong>Tip:</strong> Enter the actual work period times. For example, if work was done from 5:00 PM to 8:00 PM on Day 1, and 10:00 AM to 1:30 PM on Day 2, add them as separate sessions.
+                    </div>
+                    <div class="mb-3">
+                        <label>Session Start Time <span class="text-danger">*</span></label>
+                        <input type="datetime-local" name="session_start" class="form-control" required>
+                        <small class="text-muted">When did this work period start?</small>
+                    </div>
+                    <div class="mb-3">
+                        <label>Session End Time <span class="text-danger">*</span></label>
+                        <input type="datetime-local" name="session_end" class="form-control" required>
+                        <small class="text-muted">When did this work period end?</small>
+                    </div>
+                    <div class="mb-3">
+                        <label>Notes (Optional)</label>
+                        <input type="text" name="notes" class="form-control" placeholder="e.g., Day 1 evening shift, Day 2 morning shift">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">Add Session</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
 <!-- Downtime Modal -->
-@if($log)
 <div class="modal fade" id="downtimeModal" tabindex="-1">
     <div class="modal-dialog">
         <form action="{{ route('corrugation.downtime.store', $log->id) }}" method="POST">
@@ -310,3 +435,15 @@
 @endif
 
 @endsection
+
+@push('scripts')
+<script>
+    // Auto-show initial time setup modal if needed
+    @if(isset($needsTimeSetup) && $needsTimeSetup)
+    document.addEventListener('DOMContentLoaded', function() {
+        var modal = new bootstrap.Modal(document.getElementById('initialTimeSetupModal'));
+        modal.show();
+    });
+    @endif
+</script>
+@endpush

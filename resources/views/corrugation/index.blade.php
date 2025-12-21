@@ -16,7 +16,8 @@
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th>Job No</th>
+                        <th>Issue No.</th>
+                        <th>Job Card No.</th>
                         <th>Customer</th>
                         <th>Item</th>
                         <th>Order Qty (Sheets)</th>
@@ -27,6 +28,7 @@
                 <tbody>
                     @forelse($jobIssues as $issue)
                     <tr>
+                        <td><strong>{{ $issue->issue_no }}</strong></td>
                         <td>{{ $issue->jobCard->job_no }}</td>
                         <td>{{ $issue->customer->name }}</td>
                         <td>{{ $issue->jobCard->item_name }}</td>

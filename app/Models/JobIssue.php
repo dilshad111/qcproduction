@@ -12,7 +12,7 @@ class JobIssue extends Model implements Auditable
     use \OwenIt\Auditing\Auditable;
 
     protected $fillable = [
-        'job_card_id', 'customer_id', 'po_number', 'order_qty_cartons',
+        'issue_no', 'job_card_id', 'customer_id', 'po_number', 'order_qty_cartons',
         'required_sheet_qty', 'status'
     ];
 

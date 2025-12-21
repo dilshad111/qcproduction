@@ -26,21 +26,27 @@ Route::middleware(['auth'])->group(function () {
     
     Route::get('masters', [App\Http\Controllers\MastersController::class, 'index'])->name('masters.index');
     Route::post('masters/ink', [App\Http\Controllers\MastersController::class, 'storeInk'])->name('masters.ink.store');
+    Route::put('masters/ink/{ink}', [App\Http\Controllers\MastersController::class, 'updateInk'])->name('masters.ink.update');
     Route::delete('masters/ink/{ink}', [App\Http\Controllers\MastersController::class, 'destroyInk'])->name('masters.ink.destroy');
     
     Route::post('masters/carton-type', [App\Http\Controllers\MastersController::class, 'storeCartonType'])->name('masters.carton-type.store');
+    Route::put('masters/carton-type/{cartonType}', [App\Http\Controllers\MastersController::class, 'updateCartonType'])->name('masters.carton-type.update');
     Route::delete('masters/carton-type/{cartonType}', [App\Http\Controllers\MastersController::class, 'destroyCartonType'])->name('masters.carton-type.destroy');
     
     Route::post('masters/machine-speed', [App\Http\Controllers\MastersController::class, 'updateMachineSpeed'])->name('masters.machine-speed.update');
     Route::post('masters/job-number-setup', [App\Http\Controllers\MastersController::class, 'storeJobNumberSetup'])->name('masters.job-number-setup.store');
+    Route::post('masters/job-issue-number-setup', [App\Http\Controllers\MastersController::class, 'storeJobIssueNumberSetup'])->name('masters.job-issue-number-setup.store');
     
     Route::post('masters/paper', [App\Http\Controllers\MastersController::class, 'storePaper'])->name('masters.paper.store');
+    Route::put('masters/paper/{paper}', [App\Http\Controllers\MastersController::class, 'updatePaper'])->name('masters.paper.update');
     Route::delete('masters/paper/{paper}', [App\Http\Controllers\MastersController::class, 'destroyPaper'])->name('masters.paper.destroy');
 
     Route::post('masters/machine', [App\Http\Controllers\MastersController::class, 'storeMachine'])->name('masters.machine.store');
+    Route::put('masters/machine/{machine}', [App\Http\Controllers\MastersController::class, 'updateMachine'])->name('masters.machine.update');
     Route::delete('masters/machine/{machine}', [App\Http\Controllers\MastersController::class, 'destroyMachine'])->name('masters.machine.destroy');
 
     Route::post('masters/staff', [App\Http\Controllers\MastersController::class, 'storeStaff'])->name('masters.staff.store');
+    Route::put('masters/staff/{staff}', [App\Http\Controllers\MastersController::class, 'updateStaff'])->name('masters.staff.update');
     Route::delete('masters/staff/{staff}', [App\Http\Controllers\MastersController::class, 'destroyStaff'])->name('masters.staff.destroy');
 
     Route::resource('job-cards', App\Http\Controllers\JobCardController::class);
@@ -48,7 +54,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('api/customer/{customer}/jobs', [App\Http\Controllers\JobCardController::class, 'getByCustomer'])->name('api.customer.jobs');
     Route::post('job-cards/generate-dieline', [App\Http\Controllers\JobCardController::class, 'generateDieLine'])->name('job-cards.generate-dieline');
     
+    
     Route::resource('production', App\Http\Controllers\JobIssueController::class);
+    Route::get('production/{jobIssue}/print', [App\Http\Controllers\JobIssueController::class, 'print'])->name('production.print');
     
     Route::get('production/{jobIssue}/manage', [App\Http\Controllers\ProductionTrackingController::class, 'manage'])->name('production.manage');
     Route::post('production/{jobIssue}/reel', [App\Http\Controllers\ProductionTrackingController::class, 'storeReel'])->name('production.reel.store');
@@ -67,6 +75,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('corrugation/{log}/end', [App\Http\Controllers\CorrugationController::class, 'endJob'])->name('corrugation.end');
     Route::post('corrugation/{log}/downtime', [App\Http\Controllers\CorrugationController::class, 'storeDowntime'])->name('corrugation.downtime.store');
     Route::post('corrugation/{log}/wastage', [App\Http\Controllers\CorrugationController::class, 'logWastage'])->name('corrugation.wastage');
+    Route::post('corrugation/{log}/time-session', [App\Http\Controllers\CorrugationController::class, 'addTimeSession'])->name('corrugation.time-session.add');
+    Route::post('corrugation/{log}/pause', [App\Http\Controllers\CorrugationController::class, 'pauseSession'])->name('corrugation.session.pause');
+    Route::post('corrugation/{log}/resume', [App\Http\Controllers\CorrugationController::class, 'resumeSession'])->name('corrugation.session.resume');
 
     // User Management
     Route::resource('users', App\Http\Controllers\UserController::class);

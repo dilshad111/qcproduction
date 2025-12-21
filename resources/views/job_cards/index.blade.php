@@ -21,7 +21,7 @@
             <form method="GET" action="{{ route('job-cards.index') }}" class="mb-3">
                 <div class="row">
                     <div class="col-md-4 mb-2">
-                        <input type="text" name="search" class="form-control" placeholder="Search by Job No, Item Name, or Customer" value="{{ request('search') }}">
+                        <input type="text" name="search" class="form-control" placeholder="Search by Job Card No., Item Name, or Customer" value="{{ request('search') }}">
                     </div>
                     <div class="col-md-4 mb-2">
                         <select name="customer_id" class="form-control">
@@ -44,7 +44,7 @@
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th>Job No</th>
+                        <th>Job Card No.</th>
                         <th>Customer</th>
                         <th>Item Name</th>
                         <th>Size (L x W x H)</th>

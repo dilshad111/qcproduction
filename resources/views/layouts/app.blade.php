@@ -159,6 +159,29 @@
         .navbar.default-layout .navbar-brand-wrapper .navbar-brand img {
             height: 35px !important;
         }
+
+        /* Increased Menu Font Sizes for Better Readability */
+        .sidebar .nav .nav-item .nav-link .menu-title {
+            font-size: 16px !important;
+            font-weight: 500 !important;
+        }
+        .sidebar .nav .nav-item .nav-link .menu-icon {
+            font-size: 20px !important;
+        }
+        .sidebar .nav .nav-category {
+            font-size: 14px !important;
+            font-weight: 600 !important;
+        }
+        .sidebar .nav .nav-item .nav-link .sub-menu .nav-item .nav-link {
+            font-size: 15px !important;
+        }
+        .navbar .navbar-nav .nav-link {
+            font-size: 15px !important;
+            font-weight: 500 !important;
+        }
+        .dropdown-menu .dropdown-item {
+            font-size: 15px !important;
+        }
     </style>
 </head>
 <body data-theme="{{ Auth::user()->theme ?? 'light' }}">
@@ -294,15 +317,21 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('production.index') }}">
-                            <i class="mdi mdi-factory menu-icon text-production"></i>
-                            <span class="menu-title">Production</span>
+                        <a class="nav-link" href="{{ route('production.create') }}">
+                            <i class="mdi mdi-file-document-edit menu-icon text-warning"></i>
+                            <span class="menu-title">Issue Job Order</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('corrugation.index') }}">
                             <i class="mdi mdi-cogs menu-icon text-dark"></i>
                             <span class="menu-title">Corrugation Plant</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('production.index') }}">
+                            <i class="mdi mdi-factory menu-icon text-production"></i>
+                            <span class="menu-title">Production</span>
                         </a>
                     </li>
                     
@@ -365,5 +394,6 @@
     <script src="https://cdn.jsdelivr.net/gh/BootstrapDash/star-admin2-free-admin-template@main/src/assets/js/off-canvas.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/BootstrapDash/star-admin2-free-admin-template@main/src/assets/js/hoverable-collapse.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/BootstrapDash/star-admin2-free-admin-template@main/src/assets/js/template.js"></script>
+    @stack('scripts')
 </body>
 </html>

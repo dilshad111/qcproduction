@@ -150,7 +150,7 @@
                 <div style="font-size:10px;">{{ $company->address ?? '' }}</div>
             </div>
             <div class="meta-section">
-                <div class="meta-row"><span>Job No:</span> <strong>{{ $jobCard->job_no }}</strong></div>
+                <div class="meta-row"><span>Job Card No.:</span> <strong>{{ $jobCard->job_no }}</strong></div>
                 <div class="meta-row"><span>Date:</span> <span>{{ $jobCard->created_at->format('d-m-Y') }}</span></div>
                 <div class="meta-row"><span>Doc No:</span> <span>PRD-FRM-01</span></div>
                 <div class="meta-row"><span>Rev:</span> <span>02</span></div>

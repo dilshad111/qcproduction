@@ -37,7 +37,11 @@ class JobIssueController extends Controller
         $ups = $jobCard->ups > 0 ? $jobCard->ups : 1;
         $requiredSheets = ceil($request->order_qty_cartons / $ups);
 
+        // Generate Issue Number
+        $issueNo = \App\Models\JobIssueNumberSetup::getNextIssueNumber();
+
         $issue = JobIssue::create([
+            'issue_no' => $issueNo,
             'customer_id' => $request->customer_id,
             'job_card_id' => $request->job_card_id,
             'po_number' => $request->po_number,
@@ -46,6 +50,14 @@ class JobIssueController extends Controller
             'status' => 'Pending'
         ]);
 
-        return redirect()->route('production.index')->with('success', 'Job Issued for Production. Required Sheets: ' . $requiredSheets);
+        return redirect()->route('production.index')->with('success', 'Job Issued for Production. Issue No: ' . $issueNo . ' | Required Sheets: ' . $requiredSheets);
+    }
+
+    public function print($id)
+    {
+        $issue = JobIssue::with(['customer', 'jobCard'])->findOrFail($id);
+        $company = \App\Models\Company::first();
+        
+        return view('production.print_issue', compact('issue', 'company'));
     }
 }

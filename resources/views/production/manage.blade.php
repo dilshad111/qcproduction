@@ -4,10 +4,10 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12 mb-3">
-             <h2>Production Management: {{ $jobIssue->jobCard->job_no }}</h2>
-             <span class="badge bg-secondary">PO: {{ $jobIssue->po_number }}</span>
+             <h2>Production Management: {{ $jobIssue->issue_no }}</h2>
              <span class="badge bg-info">Customer: {{ $jobIssue->customer->name }}</span>
-             <span class="badge bg-dark">Order Qty: {{ $jobIssue->order_qty_cartons }}</span>
+             <span class="badge bg-dark">Order Qty: {{ $jobIssue->order_qty_cartons }} Cartons</span>
+             <span class="badge bg-secondary">Job Card: {{ $jobIssue->jobCard->job_no }}</span>
         </div>
     </div>
 
@@ -16,23 +16,8 @@
     @endif
 
     <div class="row">
-        <!-- REEL DATA ENTRY -->
-        <div class="col-md-6">
-            <!-- REEL DATA MOVED TO CORRUGATION -->
-
-
-            <!-- TIME ESTIMATION -->
-            <div class="card mb-3">
-                <div class="card-header bg-warning text-dark">Time Estimation</div>
-                <div class="card-body">
-                    <h5>Estimated Job Duration: <strong>{{ $estimatedTime }}</strong> (HH:MM:SS)</h5>
-                    <small>Based on Speed: {{ $jobIssue->jobCard->ply_type == 5 ? $machineSpeed->speed_5ply : $machineSpeed->speed_3ply }} m/min</small>
-                </div>
-            </div>
-        </div>
-
         <!-- PROCESS TRACKING -->
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div class="card mb-3">
                 <div class="card-header">Process Tracking</div>
                 <div class="card-body">
@@ -43,7 +28,7 @@
                         @php
                             $track = $jobIssue->tracking->where('process_stage', $process)->first();
                         @endphp
-                        <form action="{{ route('production.process.update', $jobIssue->id) }}" method="POST" class="mb-3 border-bottom pb-2">
+                        <form action="{{ route('production.process.update', $jobIssue->id) }}" method="POST" class="mb-3 border-bottom pb-3">
                             @csrf
                             <input type="hidden" name="process_stage" value="{{ $process }}">
                             <div class="d-flex justify-content-between align-items-center mb-2">
@@ -55,42 +40,56 @@
                                 </select>
                             </div>
                             
-                            <div class="row g-1 mb-2">
-                                <div class="col-6">
+                            <div class="row g-2 mb-2">
+                                <div class="col-md-3">
+                                    <label class="form-label mb-0 small">Date</label>
+                                    <input type="date" name="date" class="form-control form-control-sm" value="{{ $track && $track->date ? $track->date : date('Y-m-d') }}">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label mb-0 small">Produced Qty</label>
+                                    <input type="number" name="produced_qty" class="form-control form-control-sm" placeholder="Qty" value="{{ $track ? $track->produced_qty : '' }}">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label mb-0 small">Machine</label>
                                     <select name="machine_id" class="form-control form-control-sm">
                                         <option value="">Select Machine</option>
                                         @foreach($machines as $machine)
-                                            <option value="{{ $machine->id }}" {{ ($track && $track->machine_id == $machine->id) ? 'selected' : '' }}>{{ $machine->name }} ({{ $machine->type }})</option>
+                                            <option value="{{ $machine->id }}" {{ ($track && $track->machine_id == $machine->id) ? 'selected' : '' }}>{{ $machine->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-md-3">
+                                    <label class="form-label mb-0 small">{{ $process == 'QC' ? 'QC Personnel' : 'Operator' }}</label>
                                     <select name="staff_id" class="form-control form-control-sm">
-                                        <option value="">Select Operator</option>
-                                        @foreach($staffs as $staff)
-                                            <option value="{{ $staff->id }}" {{ ($track && $track->staff_id == $staff->id) ? 'selected' : '' }}>{{ $staff->name }} ({{ $staff->role }})</option>
-                                        @endforeach
+                                        <option value="">Select</option>
+                                        @if($process == 'QC')
+                                            @foreach($qcStaffs as $staff)
+                                                <option value="{{ $staff->id }}" {{ ($track && $track->staff_id == $staff->id) ? 'selected' : '' }}>{{ $staff->name }}</option>
+                                            @endforeach
+                                        @else
+                                            @foreach($staffs as $staff)
+                                                <option value="{{ $staff->id }}" {{ ($track && $track->staff_id == $staff->id) ? 'selected' : '' }}>{{ $staff->name }}</option>
+                                            @endforeach
+                                        @endif
                                     </select>
                                 </div>
                             </div>
 
-                            <div class="row g-1 mb-2">
-                                <div class="col-6">
-                                    <input type="date" name="date" class="form-control form-control-sm" value="{{ $track && $track->date ? $track->date : date('Y-m-d') }}">
+                            <div class="row g-2 mb-2">
+                                <div class="col-md-9">
+                                    <label class="form-label mb-0 small">Remarks</label>
+                                    <input type="text" name="remarks" class="form-control form-control-sm" placeholder="Remarks" value="{{ $track ? $track->remarks : '' }}">
                                 </div>
-                                <div class="col-6">
-                                    <input type="number" name="produced_qty" class="form-control form-control-sm" placeholder="Produced Qty" value="{{ $track ? $track->produced_qty : '' }}">
+                                <div class="col-md-3">
+                                    <label class="form-label mb-0 small">QC Check</label>
+                                    <select name="qc_approved" class="form-control form-control-sm">
+                                        <option value="0" {{ (!$track || !$track->qc_approved) ? 'selected' : '' }}>Pending</option>
+                                        <option value="1" {{ ($track && $track->qc_approved) ? 'selected' : '' }}>Approved</option>
+                                    </select>
                                 </div>
                             </div>
                             
-                            @if($process == 'QC')
-                            <div class="form-check mt-2">
-                                <input class="form-check-input" type="checkbox" name="qc_approved" {{ ($track && $track->qc_approved) ? 'checked' : '' }}>
-                                <label class="form-check-label">QC Approved</label>
-                            </div>
-                            @endif
-                            <input type="text" name="remarks" class="form-control form-control-sm mt-1" placeholder="Remarks" value="{{ $track ? $track->remarks : '' }}">
-                            <button type="submit" class="btn btn-sm btn-success mt-1 w-100">Update {{ $process }}</button>
+                            <button type="submit" class="btn btn-sm btn-success w-100">Update {{ $process }}</button>
                         </form>
                     @endforeach
                 </div>

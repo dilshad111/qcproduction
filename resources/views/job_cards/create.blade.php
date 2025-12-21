@@ -26,31 +26,47 @@
             <div class="card-header">Basic Information</div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label>Customer</label>
-                        <select name="customer_id" class="form-control" required>
-                            <option value="">Select Customer</option>
-                            @foreach($customers as $c)
-                                <option value="{{ $c->id }}" {{ old('customer_id') == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>
-                            @endforeach
-                        </select>
+                    <!-- Left Column (Inputs) -->
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label>Customer</label>
+                                <select name="customer_id" class="form-control" required>
+                                    <option value="">Select Customer</option>
+                                    @foreach($customers as $c)
+                                        <option value="{{ $c->id }}" {{ old('customer_id') == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Item Code</label>
+                                <input type="text" name="item_code" class="form-control" value="{{ old('item_code') }}">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label>Carton Type</label>
+                                <select name="carton_type_id" id="carton_type_id" class="form-control" required onchange="updateCartonPreview()">
+                                    <option value="">Select Type</option>
+                                    @foreach($cartonTypes as $t)
+                                        <option value="{{ $t->id }}" data-code="{{ $t->standard_code }}" {{ old('carton_type_id') == $t->id ? 'selected' : '' }}>{{ $t->name }} ({{ $t->standard_code }})</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label>Item Name</label>
+                                <input type="text" name="item_name" class="form-control" value="{{ old('item_name') }}" required>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label>Carton Type</label>
-                        <select name="carton_type_id" class="form-control" required>
-                            <option value="">Select Type</option>
-                            @foreach($cartonTypes as $t)
-                                <option value="{{ $t->id }}" {{ old('carton_type_id') == $t->id ? 'selected' : '' }}>{{ $t->name }} ({{ $t->standard_code }})</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label>Item Name</label>
-                        <input type="text" name="item_name" class="form-control" value="{{ old('item_name') }}" required>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label>Item Code</label>
-                        <input type="text" name="item_code" class="form-control" value="{{ old('item_code') }}">
+
+                    <!-- Right Column (Preview) -->
+                    <div class="col-md-3 d-flex align-items-center justify-content-center border-start">
+                        <div id="carton_preview_container" class="text-center" style="display:none; width: 100%;">
+                            <label class="small text-muted d-block mb-2">Design Preview</label>
+                            <img id="carton_preview_img" src="" style="max-width: 100%; max-height: 200px; object-fit: contain;" 
+                                 onerror="if(this.src.endsWith('.png')){this.src=this.src.replace('.png','.jpg')}else{this.parentElement.style.display='none'}">
+                        </div>
                     </div>
                 </div>
 
@@ -317,6 +333,37 @@ document.getElementById('dimension_height').addEventListener('input', updateCalc
 
 // Initial calculation on page load
 updateCalculations();
+updateCartonPreview();
+
+function updateCartonPreview() {
+    const select = document.getElementById('carton_type_id');
+    const container = document.getElementById('carton_preview_container');
+    const img = document.getElementById('carton_preview_img');
+    
+    if (!select || !select.value) {
+        if(container) container.style.display = 'none';
+        return;
+    }
+
+    const selectedOption = select.options[select.selectedIndex];
+    if (!selectedOption) return;
+
+    let code = selectedOption.getAttribute('data-code');
+    if (!code) {
+        const match = selectedOption.text.match(/\(([^)]+)\)/);
+        if (match) code = match[1];
+    }
+    
+    if (code) {
+        code = code.trim();
+        // Reset error handler state by setting src
+        img.style.display = 'inline-block';
+        container.style.display = 'block';
+        img.src = `/images/fefco/${code}.png`;
+    } else {
+        container.style.display = 'none';
+    }
+}
 
 // Existing renderLayers function
 function renderLayers() {

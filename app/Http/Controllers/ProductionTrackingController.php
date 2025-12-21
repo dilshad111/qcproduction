@@ -55,10 +55,32 @@ class ProductionTrackingController extends Controller
         $processes[] = 'Pasting/Stitching'; // Generic term, could be specific
         $processes[] = 'Bundling';
         
-        $machines = Machine::where('status', 1)->get();
-        $staffs = Staff::where('status', 1)->get();
+        // Get machines from Production Department only (exclude Corrugation Plant)
+        $machines = Machine::where('department', 'Production Department')->where('status', 1)->get();
+        if($machines->isEmpty()){
+             // Fallback to all active machines except Corrugation Plant
+             $machines = Machine::where('status', 1)
+                 ->where('department', '!=', 'Corrugation Plant')
+                 ->get();
+        }
+        
+        // Get staff from Production Department for operators (exclude Corrugation Plant)
+        $staffs = Staff::where('department', 'Production Department')->where('status', 1)->get();
+        if($staffs->isEmpty()){
+             // Fallback to all active staff except Corrugation Plant
+             $staffs = Staff::where('status', 1)
+                 ->where('department', '!=', 'Corrugation Plant')
+                 ->get();
+        }
+        
+        // Get QC personnel from Quality Control department
+        $qcStaffs = Staff::where('department', 'Quality Control')->where('status', 1)->get();
+        if($qcStaffs->isEmpty()){
+             // Fallback to all active staff if no QC staff found
+             $qcStaffs = Staff::where('status', 1)->get();
+        }
 
-        return view('production.manage', compact('jobIssue', 'estimatedTime', 'machineSpeed', 'processes', 'machines', 'staffs'));
+        return view('production.manage', compact('jobIssue', 'estimatedTime', 'machineSpeed', 'processes', 'machines', 'staffs', 'qcStaffs'));
     }
 
     public function storeReel(Request $request, JobIssue $jobIssue)

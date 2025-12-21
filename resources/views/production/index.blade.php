@@ -16,7 +16,8 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>Job No</th>
+                        <th>Issue No.</th>
+                        <th>Job Card No.</th>
                         <th>PO No</th>
                         <th>Customer</th>
                         <th>Order Qty</th>
@@ -29,6 +30,7 @@
                 <tbody>
                     @foreach($issues as $issue)
                     <tr>
+                        <td><strong>{{ $issue->issue_no }}</strong></td>
                         <td>{{ $issue->jobCard->job_no }}</td>
                         <td>{{ $issue->po_number }}</td>
                         <td>{{ $issue->customer->name }}</td>
@@ -47,7 +49,12 @@
                         </td>
                         <td>{{ $issue->created_at->format('d-m-Y') }}</td>
                         <td>
-                            <a href="{{ route('production.manage', $issue->id) }}" class="btn btn-sm btn-dark shadow-sm"><i class="fas fa-gears"></i> Manage Production</a>
+                            <a href="{{ route('production.print', $issue->id) }}" class="btn btn-sm btn-success shadow-sm" target="_blank">
+                                <i class="fas fa-print"></i> Print
+                            </a>
+                            <a href="{{ route('production.manage', $issue->id) }}" class="btn btn-sm btn-dark shadow-sm">
+                                <i class="fas fa-gears"></i> Manage
+                            </a>
                         </td>
                     </tr>
                     @endforeach

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Staff extends Model
 {
     protected $table = 'staffs'; // Explicitly set table name if needed
-    protected $fillable = ['name', 'role', 'status'];
+    protected $fillable = ['name', 'department', 'role', 'status'];
 
     public function trackings()
     {
