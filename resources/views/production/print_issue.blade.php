@@ -3,428 +3,576 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Issue - {{ $issue->jobCard->job_no }}</title>
+    <title>Job Issue - {{ $issue->issue_no }}</title>
     <style>
         @page {
             size: A4;
-            margin: 15mm;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            margin: 3mm 3mm 3mm 10mm;
         }
         
         body {
             font-family: Arial, sans-serif;
-            font-size: 11pt;
-            line-height: 1.3;
+            font-size: 10px;
             color: #000;
+            background: #fff;
+            margin: 0;
+            padding: 0;
         }
         
-        .container {
+        .print-container {
             width: 100%;
-            max-width: 210mm;
-            margin: 0 auto;
+            height: auto;
+            position: relative;
         }
         
-        /* Header */
-        .header {
-            text-align: center;
-            margin-bottom: 15px;
-            border-bottom: 3px solid #000;
-            padding-bottom: 10px;
-        }
-        
-        .header .logo {
-            max-height: 60px;
-            margin-bottom: 5px;
-        }
-        
-        .header h1 {
-            font-size: 20pt;
-            font-weight: bold;
-            margin: 5px 0;
-        }
-        
-        .header .company-info {
-            font-size: 9pt;
-            margin-top: 3px;
-        }
-        
-        .doc-title {
-            background: #000;
-            color: #fff;
-            text-align: center;
-            padding: 8px;
-            font-size: 14pt;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-        
-        /* Job Details Section */
-        .job-details {
-            border: 2px solid #000;
-            margin-bottom: 10px;
-        }
-        
-        .job-details table {
+        table {
             width: 100%;
             border-collapse: collapse;
         }
         
-        .job-details th,
-        .job-details td {
+        th, td {
             border: 1px solid #000;
-            padding: 6px 8px;
+            padding: 2px 4px;
             text-align: left;
         }
         
-        .job-details th {
-            background: #e0e0e0;
-            font-weight: bold;
-            width: 25%;
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .font-bold { font-weight: bold; }
+        
+        /* Header Style */
+        .header-table td {
+            padding: 5px;
         }
         
-        /* Section Headers */
+        .doc-title-bar {
+            background: #000;
+            color: #fff;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 5px;
+            margin: 2px 0;
+        }
+        
+        .main-info-table th {
+            background: #f2f2f2;
+            width: 20%;
+        }
+        
+        .piece-header {
+            background: #f2f2f2;
+            color: #d9534f;
+            text-align: center;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        
         .section-header {
             background: #333;
             color: #fff;
-            padding: 6px 10px;
+            padding: 3px;
             font-weight: bold;
-            font-size: 12pt;
-            margin-top: 10px;
-            margin-bottom: 5px;
-        }
-        
-        /* Data Entry Tables */
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 10px;
-        }
-        
-        .data-table th,
-        .data-table td {
-            border: 1px solid #000;
-            padding: 8px 6px;
+            font-size: 11px;
+            margin-top: 3px;
+            text-align: center;
+        }.data-table th {
+            background: #eee;
+            font-size: 10px;
             text-align: center;
         }
         
-        .data-table th {
-            background: #d0d0d0;
-            font-weight: bold;
-            font-size: 10pt;
-        }
-        
         .data-table td {
-            height: 25px;
+            height: 20px;
         }
         
-        .data-table .wide-cell {
-            min-width: 80px;
-        }
-        
-        /* Signature Section */
         .signature-row {
             display: flex;
             justify-content: space-between;
-            margin: 15px 0;
-            gap: 10px;
+            margin-top: 10px;
+            gap: 5px;
         }
         
         .signature-box {
             flex: 1;
-            text-align: center;
             border: 1px solid #000;
-            padding: 8px;
-            min-height: 60px;
+            padding: 5px;
+            text-align: center;
+            min-height: 50px;
         }
         
         .signature-box .label {
             font-weight: bold;
-            font-size: 9pt;
-            margin-bottom: 25px;
+            font-size: 10px;
             display: block;
+            margin-bottom: 20px;
         }
         
         .signature-box .line {
             border-top: 1px solid #000;
-            margin-top: 30px;
-            padding-top: 3px;
-            font-size: 8pt;
+            font-size: 9px;
+            padding-top: 2px;
         }
-        
-        /* Print Styles */
-        @media print {
-            body {
-                margin: 0;
-                padding: 0;
-            }
-            
-            .no-print {
-                display: none !important;
-            }
-            
-            .page-break {
-                page-break-after: always;
-            }
-        }
-        
-        .print-button {
+
+        .no-print {
             position: fixed;
             top: 20px;
             right: 20px;
-            padding: 12px 24px;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14pt;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
             z-index: 1000;
         }
-        
-        .print-button:hover {
-            background: #0056b3;
+
+        .btn-print {
+            padding: 10px 20px;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
-        
-        .info-text {
-            font-size: 9pt;
-            font-style: italic;
-            color: #666;
-            margin: 3px 0;
+
+        @media print {
+            .no-print { display: none; }
         }
     </style>
 </head>
-<body>
-    <button class="print-button no-print" onclick="window.print()">🖨️ Print</button>
-    
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            @if(isset($company) && $company->logo_path)
-                <img src="{{ asset('storage/' . $company->logo_path) }}" alt="Company Logo" class="logo">
-            @endif
-            <h1>{{ isset($company) ? $company->name : 'CORRUGO MIS' }}</h1>
-            <div class="company-info">
-                @if(isset($company))
-                    {{ $company->address ?? '' }} | Phone: {{ $company->phone ?? '' }} | Email: {{ $company->email ?? '' }}
-                @endif
+<body onload="window.print()">
+    <div class="no-print">
+        <button class="btn-print" onclick="window.print()">Print Report</button>
+    </div>
+
+    <div class="print-container">
+        <!-- Header Grid -->
+        <table class="header-table" style="border: 2px solid #000;">
+            <tr>
+                <td rowspan="2" style="width: 12%; border-right: 2px solid #000; text-align: center;">
+                    @if(isset($company) && $company->logo_path)
+                        <img src="{{ asset('storage/' . $company->logo_path) }}" alt="Logo" style="max-height: 50px; max-width: 100px;">
+                    @else
+                        <div style="font-weight: bold; font-size: 18px;">QC</div>
+                    @endif
+                </td>
+                <td colspan="8" style="text-align: center; border-bottom: 2px solid #000;">
+                    <h2 style="margin: 0; color: #0000CD; font-size: 18px;">2nd Process Manufacturing Report</h2>
+                </td>
+            </tr>
+            <tr style="font-size: 10px;">
+                <td style="border-right: 1px solid #000; font-weight: bold; width: 14%; vertical-align: middle; padding: 5px; text-align: center;">Document ID No</td>
+                <td style="border-right: 1px solid #000; width: 14%; vertical-align: middle; padding: 5px; text-align: center;">QC/DI3A/051</td>
+                <td style="border-right: 1px solid #000; font-weight: bold; width: 8%; vertical-align: middle; padding: 5px; text-align: center;">Rev. #</td>
+                <td style="border-right: 1px solid #000; width: 8%; vertical-align: middle; padding: 5px; text-align: center;">0</td>
+                <td style="border-right: 1px solid #000; font-weight: bold; width: 12%; vertical-align: middle; padding: 5px; text-align: center;">Rev. Date</td>
+                <td style="border-right: 1px solid #000; width: 12%; vertical-align: middle; padding: 5px; text-align: center;">16/10/2016</td>
+                <td style="border-right: 1px solid #000; font-weight: bold; width: 12%; white-space: nowrap; vertical-align: middle; padding: 5px; text-align: center;">Page #</td>
+                <td style="width: 14%; white-space: nowrap; vertical-align: middle; padding: 5px; text-align: center;">1 of 1</td>
+            </tr>
+        </table>
+
+        <div class="doc-title-bar">2nd PROCESS MANUFACTURING FOR CORRUGATED SHEET</div>
+
+        <!-- Main Info Table -->
+        <table class="main-info-table">
+            <tr>
+                <th class="font-bold">Issue No.:</th>
+                <td style="color: #d9534f; font-weight: bold; font-size: 13px;">{{ $issue->issue_no }}</td>
+                <th class="font-bold">Issue Date:</th>
+                <td>{{ \Carbon\Carbon::parse($issue->created_at)->format('d/m/Y') }}</td>
+            </tr>
+            <tr>
+                <th class="font-bold">Cartons Quantity</th>
+                <td class="font-bold">{{ number_format($issue->order_qty_cartons) }}</td>
+                <th class="font-bold">PO Number:</th>
+                <td>{{ $issue->po_number }}</td>
+            </tr>
+            <tr>
+                <th class="font-bold">Customer & Item Name:</th>
+                <td colspan="3">
+                    <span class="font-bold">{{ $issue->customer->name }}</span>
+                    <span style="margin: 0 10px;">|</span>
+                    <span>{{ $issue->jobCard->item_name }}</span>
+                </td>
+            </tr>
+            <tr>
+                <th class="font-bold">Item Name & Code:</th>
+                <td colspan="3">
+                    <span>{{ $issue->jobCard->item_name }}</span>
+                    <span style="margin: 0 10px;">|</span>
+                    <span class="font-bold">{{ $issue->jobCard->item_code }}</span>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Pieces Split Logic -->
+        @if($issue->jobCard->pieces_count > 1)
+            <div style="display: flex; border: 1px solid #000; margin-top: -1px;">
+                @foreach($issue->jobCard->pieces as $index => $piece)
+                    <div style="flex: 1; {{ $index == 0 ? 'border-right: 1px solid #000;' : '' }}">
+                        <table>
+                            <tr>
+                                <td colspan="2" class="piece-header">{{ $piece->piece_name ?: 'Piece ' . ($index + 1) }}</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold" style="width: 40%;">Ply:</td>
+                                <td class="text-center">{{ $piece->ply_type }}-Ply</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Dimensions (L×W×H):</td>
+                                <td class="text-center">{{ (int)$piece->length }}x{{ (int)$piece->width }}x{{ (int)$piece->height }} mm</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Deckle Size inch</td>
+                                <td class="text-center">{{ $piece->deckle_size }}"</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Sheet Length inch</td>
+                                <td class="text-center">{{ $piece->sheet_length }}" | {{ round($piece->sheet_length * 25.4) }} mm</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">UPS</td>
+                                <td class="text-center">{{ $piece->ups }}</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Construction:</td>
+                                <td style="font-size: 9px; line-height: 1;">
+                                    @foreach($piece->layers as $layer)
+                                        {{ $layer->paper_name }} ({{ $layer->gsm }}){{ !$loop->last ? ' | ' : '' }}
+                                    @endforeach
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Carton Quantity</td>
+                                <td class="text-center">{{ number_format($issue->order_qty_cartons) }} Cartons</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Sheet Quantity</td>
+                                @php
+                                    $pUps = $piece->ups > 0 ? $piece->ups : 1;
+                                    $pSheets = ceil($issue->order_qty_cartons / $pUps);
+                                @endphp
+                                <td class="text-center">{{ number_format($pSheets) }} Sheets</td>
+                            </tr>
+                        </table>
+                    </div>
+                @endforeach
             </div>
-        </div>
-        
-        <div class="doc-title">JOB ISSUE TO PRODUCTION</div>
-        
-        <!-- Job Details -->
-        <div class="job-details">
+        @else
+            <!-- Single Piece Layout -->
             <table>
                 <tr>
-                    <th>Issue No.:</th>
-                    <td><strong style="color: #d9534f;">{{ $issue->issue_no }}</strong></td>
-                    <th>Issue Date:</th>
-                    <td>{{ \Carbon\Carbon::parse($issue->created_at)->format('d-M-Y') }}</td>
+                    <th class="font-bold">Ply:</th>
+                    <td>{{ $issue->jobCard->ply_type }}-Ply</td>
+                    <th class="font-bold">Dimensions (L×W×H):</th>
+                    <td>{{ $issue->jobCard->length }}x{{ $issue->jobCard->width }}x{{ $issue->jobCard->height }} {{ $issue->jobCard->uom }}</td>
                 </tr>
                 <tr>
-                    <th>Job Card No:</th>
-                    <td><strong>{{ $issue->jobCard->job_no }}</strong></td>
-                    <th>PO Number:</th>
-                    <td>{{ $issue->po_number }}</td>
+                    <th class="font-bold">Deckle Size:</th>
+                    <td>{{ $issue->jobCard->deckle_size }} Inch</td>
+                    <th class="font-bold">Sheet Length:</th>
+                    <td>{{ $issue->jobCard->sheet_length }} Inch | {{ round($issue->jobCard->sheet_length * 25.4) }} mm</td>
                 </tr>
                 <tr>
-                    <th>Customer:</th>
-                    <td colspan="3"><strong>{{ $issue->customer->name }}</strong></td>
+                    <th class="font-bold">UPS:</th>
+                    <td>{{ $issue->jobCard->ups }}</td>
+                    <th class="font-bold">Required Sheets:</th>
+                    <td class="font-bold">{{ number_format($issue->required_sheet_qty) }} Sheets</td>
                 </tr>
                 <tr>
-                    <th>Item Name:</th>
-                    <td colspan="3">{{ $issue->jobCard->item_name }}</td>
+                    <th class="font-bold">Construction:</th>
+                    <td colspan="3" style="font-size: 10px;">
+                        @foreach($issue->jobCard->layers as $layer)
+                            {{ $layer->paper_name }} ({{ $layer->gsm }}) {{ $layer->flute_type ? '['.$layer->flute_type.']' : '' }}{{ !$loop->last ? ' | ' : '' }}
+                        @endforeach
+                    </td>
+                </tr>
+            </table>
+        @endif
+
+        <!-- Sections for completion -->
+        @if($issue->jobCard->pieces_count > 1)
+            <!-- Multi-piece: Show pieces side-by-side in panels -->
+            <table class="data-table" style="margin-top: 10px; table-layout: fixed; width: 100%;">
+                <thead>
+                    <tr>
+                        <th colspan="16" style="background: #333; color: #fff; text-align: center; padding: 4px; font-size: 10px;">CORRUGATION PLANT</th>
+                    </tr>
+                    <tr>
+                        @foreach($issue->jobCard->pieces as $index => $piece)
+                            <th colspan="8" style="background: #fff; text-align: center; padding: 3px; font-size: 9px; font-weight: bold; {{ $index == 0 ? 'border-right: 2px solid #000;' : '' }}">
+                                {{ $piece->piece_name ?: 'Piece ' . ($index + 1) }}
+                                &nbsp;&nbsp;|&nbsp;&nbsp;
+                                {{ number_format($piece->deckle_size, 0) }}"
+                                &nbsp;&nbsp;|&nbsp;&nbsp;
+                                {{ number_format($piece->sheet_length, 2) }}"
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                Date:_____________________
+                            </th>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        @foreach($issue->jobCard->pieces as $index => $piece)
+                            <th style="background: #000; color: #fff; width: 6.25%; padding: 2px; font-size: 8px;">Glue</th>
+                            <th style="background: #fff; width: 6.25%; padding: 2px; font-size: 8px;">Starch</th>
+                            <th style="background: #000; color: #fff; width: 6.25%; padding: 2px; font-size: 8px; line-height: 1.1;">Job Start<br>Time</th>
+                            <th style="background: #fff; width: 6.25%; padding: 2px;"></th>
+                            <th style="background: #000; color: #fff; width: 6.25%; padding: 2px; font-size: 8px; line-height: 1.1;">Job End<br>Time</th>
+                            <th style="background: #fff; width: 6.25%; padding: 2px;"></th>
+                            <th style="background: #000; color: #fff; width: 6.25%; padding: 2px; font-size: 8px; line-height: 1.1;">Sheet<br>Produced</th>
+                            <th style="background: #fff; width: 6.25%; padding: 2px; {{ $index == 0 ? 'border-right: 2px solid #000;' : '' }}"></th>
+                        @endforeach
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="height: 16px;">
+                        @foreach($issue->jobCard->pieces as $index => $piece)
+                            <td style="font-weight: bold; background: #f2f2f2; padding: 2px; font-size: 8px;">Reel #</td>
+                            <td style="padding: 2px;"></td>
+                            <td style="padding: 2px;"></td>
+                            <td style="padding: 2px;"></td>
+                            <td style="padding: 2px;"></td>
+                            <td style="padding: 2px;"></td>
+                            <td style="padding: 2px;"></td>
+                            <td style="padding: 2px; {{ $index == 0 ? 'border-right: 2px solid #000;' : '' }}"></td>
+                        @endforeach
+                    </tr>
+                    <tr style="height: 16px;">
+                        @foreach($issue->jobCard->pieces as $index => $piece)
+                            <td style="font-weight: bold; background: #f2f2f2; padding: 2px; font-size: 8px;">Size</td>
+                            <td style="padding: 2px;"></td>
+                            <td style="padding: 2px;"></td>
+                            <td style="padding: 2px;"></td>
+                            <td style="padding: 2px;"></td>
+                            <td style="padding: 2px;"></td>
+                            <td style="padding: 2px;"></td>
+                            <td style="padding: 2px; {{ $index == 0 ? 'border-right: 2px solid #000;' : '' }}"></td>
+                        @endforeach
+                    </tr>
+                    <tr style="height: 16px;">
+                        @foreach($issue->jobCard->pieces as $index => $piece)
+                            <td style="font-weight: bold; background: #f2f2f2; padding: 2px; font-size: 8px;">Weight</td>
+                            <td style="padding: 2px;"></td>
+                            <td style="padding: 2px;"></td>
+                            <td style="padding: 2px;"></td>
+                            <td style="padding: 2px;"></td>
+                            <td style="padding: 2px;"></td>
+                            <td style="padding: 2px;"></td>
+                            <td style="padding: 2px; {{ $index == 0 ? 'border-right: 2px solid #000;' : '' }}"></td>
+                        @endforeach
+                    </tr>
+                </tbody>
+            </table>
+        @else
+            <!-- Single piece: Show one table -->
+            <table class="data-table" style="margin-top: 10px; table-layout: fixed; width: 100%;">
+                <thead>
+                    <tr>
+                        <th colspan="11" style="background: #333; color: #fff; text-align: center; padding: 6px; font-size: 12px;">CORRUGATION PLANT</th>
+                    </tr>
+                    <tr>
+                        <th style="background: #000; color: #fff; width: 9.09%;">Glue</th>
+                        <th style="background: #fff; width: 9.09%;">Starch</th>
+                        <th style="background: #000; color: #fff; width: 9.09%;" colspan="2">Job Start Time</th>
+                        <th style="background: #fff; width: 9.09%;"></th>
+                        <th style="background: #000; color: #fff; width: 9.09%;" colspan="2">Job End Time</th>
+                        <th style="background: #fff; width: 9.09%;"></th>
+                        <th style="background: #000; color: #fff; width: 9.09%;" colspan="2">Sheet Produced</th>
+                        <th style="background: #fff; width: 9.09%;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr style="height: 16px;">
+                    <td style="font-weight: bold; background: #f2f2f2; padding: 2px; font-size: 8px;">Reel #</td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                </tr>
+                <tr style="height: 16px;">
+                    <td style="font-weight: bold; background: #f2f2f2; padding: 2px; font-size: 8px;">Size</td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                </tr>
+                <tr style="height: 16px;">
+                    <td style="font-weight: bold; background: #f2f2f2; padding: 2px; font-size: 8px; border-bottom: 3px double #000;">Weight</td>
+                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
+                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
+                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
+                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
+                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
+                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
+                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
+                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
+                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
+                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
+                </tr>
+                <tr style="height: 16px;">
+                    <td style="font-weight: bold; background: #f2f2f2; padding: 2px; font-size: 8px;">Reel #</td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                </tr>
+                <tr style="height: 16px;">
+                    <td style="font-weight: bold; background: #f2f2f2; padding: 2px; font-size: 8px;">Size</td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                </tr>
+                <tr style="height: 16px;">
+                    <td style="font-weight: bold; background: #f2f2f2; padding: 2px; font-size: 8px; border-bottom: 3px double #000;">Weight</td>
+                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
+                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
+                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
+                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
+                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
+                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
+                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
+                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
+                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
+                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
+                </tr>
+            </tbody>
+            </table>
+        @endif
+
+        <div class="signature-row" style="margin-top: 5px; margin-bottom: 5px;">
+            <div class="signature-box"><span class="label">Shift In-Charge</span><div class="line">Sig & Date</div></div>
+            <div class="signature-box"><span class="label">Line Clearance</span><div class="line">Sig & Date</div></div>
+            <div class="signature-box"><span class="label">Machine Supervisor</span><div class="line">Sig & Date</div></div>
+            <div class="signature-box"><span class="label">QC Personnel</span><div class="line">Sig & Date</div></div>
+        </div>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th colspan="8" style="background: #333; color: #fff; text-align: center; padding: 6px; font-size: 12px;">3rd PROCESS MANUFACTURING FOR CORRUGATED CARTONS</th>
                 </tr>
                 <tr>
-                    <th>PO Number:</th>
-                    <td>{{ $issue->po_number }}</td>
-                    <th>Item Code:</th>
-                    <td>{{ $issue->jobCard->item_code }}</td>
-                </tr>
-                <tr>
-                    <th>Carton Type:</th>
-                    <td>{{ $issue->jobCard->cartonType->name ?? 'N/A' }}</td>
-                    <th>Ply:</th>
-                    <td>{{ $issue->jobCard->ply_type }} Ply</td>
-                </tr>
-                <tr>
-                    <th>Dimensions (L×W×H):</th>
-                    <td colspan="3">
-                        {{ $issue->jobCard->length }} × {{ $issue->jobCard->width }} × {{ $issue->jobCard->height }} {{ $issue->jobCard->uom }}
+                    <td colspan="8" style="padding: 4px; font-size: 10px;">
+                        <span style="font-weight: bold;">Job Start Time & Date:</span>
+                        <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px; margin-left: 5px;"></span>
+                        <span style="font-weight: bold; margin-left: 30px;">Job End Time & Date:</span>
+                        <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px; margin-left: 5px;"></span>
                     </td>
                 </tr>
                 <tr>
-                    <th>Sheet Size:</th>
-                    <td>{{ $issue->jobCard->sheet_length }} × {{ $issue->jobCard->sheet_width }} Inch</td>
-                    <th>UPS:</th>
-                    <td>{{ $issue->jobCard->ups }}</td>
-                </tr>
-                <tr>
-                    <th>Order Quantity:</th>
-                    <td><strong>{{ number_format($issue->order_qty_cartons) }} Cartons</strong></td>
-                    <th>Required Sheets:</th>
-                    <td><strong>{{ number_format($issue->required_sheet_qty) }} Sheets</strong></td>
-                </tr>
-            </table>
-        </div>
-        
-        <!-- CORRUGATION SECTION -->
-        <div class="section-header">1. CORRUGATION PLANT</div>
-        <p class="info-text">Machine operator to fill in reel consumption and sheet production details</p>
-        
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th rowspan="2">Sr#</th>
-                    <th colspan="3">Reel Consumption</th>
-                    <th rowspan="2">Sheets Produced</th>
-                    <th rowspan="2">Remarks</th>
-                </tr>
-                <tr>
-                    <th>Reel Type</th>
-                    <th>Reel Number</th>
-                    <th>Weight (kg)</th>
+                    <th style="width: 40px;">S. No.</th>
+                    <th style="width: 10%;">Cartons Size</th>
+                    <th style="width: 10%;">Printing</th>
+                    <th style="width: 10%;">Color Shade</th>
+                    <th style="width: 10%;">Quantity of Box</th>
+                    <th style="width: 8%;">Waste</th>
+                    <th style="width: 10%;">Final Quantity</th>
+                    <th style="width: 32%;">Remarks</th>
                 </tr>
             </thead>
             <tbody>
-                @for($i = 1; $i <= 15; $i++)
-                <tr>
-                    <td>{{ $i }}</td>
-                    <td class="wide-cell"></td>
-                    <td class="wide-cell"></td>
-                    <td class="wide-cell"></td>
-                    <td class="wide-cell"></td>
-                    <td></td>
+                @for($i = 1; $i <= 2; $i++)
+                <tr style="height: 18px;">
+                    <td class="text-center" style="padding: 2px;">{{ $i }}</td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
                 </tr>
                 @endfor
             </tbody>
         </table>
-        
-        <div class="signature-row">
-            <div class="signature-box">
-                <span class="label">Shift In-Charge</span>
-                <div class="line">Signature & Date</div>
-            </div>
-            <div class="signature-box">
-                <span class="label">Line Clearance</span>
-                <div class="line">Signature & Date</div>
-            </div>
-            <div class="signature-box">
-                <span class="label">Machine Supervisor</span>
-                <div class="line">Signature & Date</div>
-            </div>
-            <div class="signature-box">
-                <span class="label">QC Personnel</span>
-                <div class="line">Signature & Date</div>
-            </div>
+
+        <div class="signature-row" style="margin-top: 5px; margin-bottom: 5px;">
+            <div class="signature-box"><span class="label">Operator</span><div class="line">Sig & Date</div></div>
+            <div class="signature-box"><span class="label">Line Clearance</span><div class="line">Sig & Date</div></div>
+            <div class="signature-box"><span class="label">Production Supervisor</span><div class="line">Sig & Date</div></div>
+            <div class="signature-box"><span class="label">QC Personnel</span><div class="line">Sig & Date</div></div>
         </div>
-        
-        <!-- PRINTING & DIE CUTTING SECTION -->
-        <div class="section-header">2. PRINTING & DIE CUTTING</div>
-        <p class="info-text">Printing operator to fill in production details and quality checks</p>
-        
-        <table class="data-table">
+
+        <table class="data-table" style="table-layout: fixed; width: 100%;">
             <thead>
                 <tr>
-                    <th>Sr#</th>
-                    <th>Date</th>
-                    <th>Printing Quality</th>
-                    <th>Size Check</th>
-                    <th>Die Cutting Quality</th>
-                    <th>Quantity Produced</th>
-                    <th>Remarks</th>
+                    <th colspan="12" style="background: #333; color: #fff; text-align: center; padding: 6px; font-size: 12px;">FINISHED GOODS DISPATCH</th>
+                </tr>
+                <tr>
+                    <th style="width: 3%;">S. No.</th>
+                    <th style="width: 13.67%;">Date</th>
+                    <th style="width: 11.67%;">Qty. In</th>
+                    <th style="width: 11.67%;">DC. No.</th>
+                    <th style="width: 11.67%;">Qty. Out</th>
+                    <th style="width: 11.67%; border-right: 2px solid #000;">Qty Balance</th>
+                    <th style="width: 3%;">S. No.</th>
+                    <th style="width: 13.67%;">Date</th>
+                    <th style="width: 11.67%;">Qty. In</th>
+                    <th style="width: 11.67%;">DC. No.</th>
+                    <th style="width: 11.67%;">Qty. Out</th>
+                    <th style="width: 11.67%;">Qty Balance</th>
                 </tr>
             </thead>
             <tbody>
-                @for($i = 1; $i <= 15; $i++)
-                <tr>
-                    <td>{{ $i }}</td>
-                    <td class="wide-cell"></td>
-                    <td class="wide-cell"></td>
-                    <td class="wide-cell"></td>
-                    <td class="wide-cell"></td>
-                    <td class="wide-cell"></td>
-                    <td></td>
+                @php
+                    $rowCount = $issue->jobCard->pieces_count > 1 ? 6 : 9;
+                @endphp
+                @for($i = 1; $i <= $rowCount; $i++)
+                <tr style="height: 18px;">
+                    <td class="text-center" style="padding: 2px;">{{ $i }}</td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="border-right: 2px solid #000; padding: 2px;"></td>
+                    <td class="text-center" style="padding: 2px;">{{ $i + $rowCount }}</td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
                 </tr>
                 @endfor
             </tbody>
         </table>
-        
-        <div class="signature-row">
-            <div class="signature-box">
-                <span class="label">Printing Operator</span>
-                <div class="line">Signature & Date</div>
-            </div>
-            <div class="signature-box">
-                <span class="label">Line Clearance</span>
-                <div class="line">Signature & Date</div>
-            </div>
-            <div class="signature-box">
-                <span class="label">Production Supervisor</span>
-                <div class="line">Signature & Date</div>
-            </div>
-            <div class="signature-box">
-                <span class="label">QC Personnel</span>
-                <div class="line">Signature & Date</div>
-            </div>
-        </div>
-        
-        <!-- DISPATCH SECTION -->
-        <div class="section-header">3. DISPATCH INFORMATION</div>
-        <p class="info-text">Dispatcher to record all dispatch details</p>
-        
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>Sr#</th>
-                    <th>Date</th>
-                    <th>Quantity In</th>
-                    <th>D.C #</th>
-                    <th>Dispatched Qty</th>
-                    <th>Balance Qty</th>
-                    <th>Remarks</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for($i = 1; $i <= 20; $i++)
-                <tr>
-                    <td>{{ $i }}</td>
-                    <td class="wide-cell"></td>
-                    <td class="wide-cell"></td>
-                    <td class="wide-cell"></td>
-                    <td class="wide-cell"></td>
-                    <td class="wide-cell"></td>
-                    <td></td>
-                </tr>
-                @endfor
-            </tbody>
+
+        <table class="data-table" style="margin-top: -1px;">
+            <tr style="height: 18px;">
+                <td style="font-weight: bold; width: 100px; padding: 4px; font-size: 9px;">Remarks:</td>
+                <td style="padding: 4px;"></td>
+            </tr>
         </table>
-        
-        <div class="signature-row">
-            <div class="signature-box" style="flex: 2;">
-                <span class="label">Dispatcher</span>
-                <div class="line">Signature, Name & Date</div>
-            </div>
-            <div class="signature-box" style="flex: 2;">
-                <span class="label">Warehouse In-Charge</span>
-                <div class="line">Signature, Name & Date</div>
+
+        <div style="text-align: center; margin-top: 40px; margin-bottom: 3px;">
+            <div style="display: inline-block;">
+                <span style="font-weight: bold; color: #000;">Dispatcher</span>
+                <span style="border-bottom: 1px solid #000; display: inline-block; width: 200px; margin-left: 10px; padding-bottom: 2px; color: #999;">Sig & Date</span>
             </div>
         </div>
-        
-        <div style="text-align: center; margin-top: 20px; font-size: 9pt; color: #666;">
-            <p>This is a computer generated document. Printed on: {{ date('d-M-Y h:i A') }}</p>
-        </div>
+
+
     </div>
-    
-    <script>
-        // Auto-print on load (optional)
-        // window.onload = function() { window.print(); }
-    </script>
 </body>
 </html>

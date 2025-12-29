@@ -12,11 +12,16 @@ class JobCardLayer extends Model implements Auditable
     use \OwenIt\Auditing\Auditable;
 
     protected $fillable = [
-        'job_card_id', 'layer_order', 'type', 'paper_name', 'gsm', 'flute_type'
+        'job_card_id', 'piece_id', 'layer_order', 'type', 'paper_name', 'gsm', 'flute_type'
     ];
 
     public function jobCard()
     {
         return $this->belongsTo(JobCard::class);
+    }
+
+    public function piece()
+    {
+        return $this->belongsTo(JobCardPiece::class);
     }
 }

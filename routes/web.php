@@ -51,6 +51,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('job-cards', App\Http\Controllers\JobCardController::class);
     Route::get('job-cards/{job_card}/print', [App\Http\Controllers\JobCardController::class, 'print'])->name('job-cards.print');
+    Route::get('job-cards/{job_card}/download', [App\Http\Controllers\JobCardController::class, 'download'])->name('job-cards.download');
+    Route::get('job-cards/{job_card}/history', [App\Http\Controllers\JobCardController::class, 'history'])->name('job-cards.history');
+    Route::get('job-cards/{job_card}/revise', [App\Http\Controllers\JobCardController::class, 'revise'])->name('job-cards.revise');
+    Route::post('job-cards/{job_card}/revise', [App\Http\Controllers\JobCardController::class, 'storeRevision'])->name('job-cards.revise.store');
     Route::get('api/customer/{customer}/jobs', [App\Http\Controllers\JobCardController::class, 'getByCustomer'])->name('api.customer.jobs');
     Route::post('job-cards/generate-dieline', [App\Http\Controllers\JobCardController::class, 'generateDieLine'])->name('job-cards.generate-dieline');
     
@@ -83,7 +87,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('users', App\Http\Controllers\UserController::class);
     Route::get('users/{user}/rights', [App\Http\Controllers\UserController::class, 'editRights'])->name('users.rights');
     Route::post('users/{user}/rights', [App\Http\Controllers\UserController::class, 'updateRights'])->name('users.rights.update');
-    Route::post('theme/update', [App\Http\Controllers\UserController::class, 'updateTheme'])->name('theme.update');
+    Route::post('theme/update', [App\Http\Controllers\ThemeController::class, 'update'])->name('theme.update');
     
     Route::get('profile', [App\Http\Controllers\UserController::class, 'editProfile'])->name('profile.edit');
     Route::post('profile', [App\Http\Controllers\UserController::class, 'updateProfile'])->name('profile.update');

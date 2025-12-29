@@ -8,45 +8,49 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         @page {
-            size: A4;
-            margin: 5mm;
+            size: A4 portrait;
+            margin: 8mm 8mm 8mm 8mm;
         }
         body {
             font-family: Arial, sans-serif;
-            font-size: 12px;
-            color: #000;
+            font-size: 9px;
+            color: #000000;
             background: #fff;
-            width: 210mm;
+            width: auto;
             max-width: 100%;
-            margin: 0 auto;
+            margin: 0;
+            padding: 0;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
         }
         .print-container {
             border: 2px solid #000;
-            padding: 5px;
+            padding: 2px;
             height: auto;
-            min-height: 280mm; /* Near full A4 height */
             display: flex;
             flex-direction: column;
+            position: relative;
+            page-break-after: avoid;
         }
         .header-grid {
             display: grid;
             grid-template-columns: 2fr 4fr 2fr;
             border-bottom: 2px solid #000;
-            margin-bottom: 10px;
+            margin-bottom: 2px;
         }
         .logo-section {
-            padding: 10px;
+            padding: 3px;
             border-right: 1px solid #000;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         .logo-section img {
-            max-width: 120px;
-            max-height: 80px;
+            max-width: 80px;
+            max-height: 30px;
         }
         .title-section {
-            padding: 10px;
+            padding: 3px;
             text-align: center;
             border-right: 1px solid #000;
             display: flex;
@@ -55,283 +59,659 @@
         }
         .title-section h1 {
             margin: 0;
-            font-size: 24px;
+            font-size: 11px;
             font-weight: bold;
             text-transform: uppercase;
         }
         .meta-section {
-            padding: 5px;
-            font-size: 10px;
+            padding: 1px;
+            font-size: 8px;
         }
         .meta-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 2px;
+            margin-bottom: 1px;
         }
         .section-box {
             border: 1px solid #000;
-            margin-bottom: 10px;
+            margin-bottom: 2px;
+            page-break-inside: avoid;
         }
         .section-title {
             background: #eee;
             font-weight: bold;
-            padding: 2px 5px;
-            border-bottom: 1px solid #000;
+            padding: 2px 4px;
+            border-bottom: 2px solid #000;
             text-align: center;
             text-transform: uppercase;
+            font-size: 10px;
         }
         .info-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            padding: 5px;
+            padding: 1px;
         }
         .info-item {
-            margin-bottom: 4px;
+            margin-bottom: 1px;
             display: flex;
         }
         .info-label {
             font-weight: bold;
-            width: 120px;
+            width: 80px;
+            font-size: 9px;
         }
         .info-value {
             flex: 1;
             border-bottom: 1px dotted #999;
+            font-size: 9px;
         }
         .table-custom {
             width: 100%;
             border-collapse: collapse;
-            font-size: 11px;
+            font-size: 8px;
         }
         .table-custom th, .table-custom td {
             border: 1px solid #000;
-            padding: 3px;
+            padding: 2px;
             text-align: center;
         }
         .technical-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 2px;
         }
         .footer-sig {
-            margin-top: auto;
+            margin-top: 2px;
             border-top: 1px solid #000;
-            padding-top: 20px;
+            padding: 1px 30px 2px 30px;
             display: flex;
             justify-content: space-between;
-            padding: 10px 50px;
+            page-break-inside: avoid;
+            page-break-before: avoid;
         }
         .sig-box {
             text-align: center;
             border-top: 1px solid #000;
-            width: 150px;
-            padding-top: 5px;
+            width: 80px;
+            padding-top: 1px;
+            margin-top: 15px;
+            font-size: 9px;
         }
         /* Ply-based tolerance logic visual helper */
         .tolerance-info {
-            font-size: 10px;
+            font-size: 8px;
             font-style: italic;
         }
+        /* Compact helpers */
+        .mb-1 { margin-bottom: 1px !important; }
+        .mb-2 { margin-bottom: 2px !important; }
+        .mt-1 { margin-top: 1px !important; }
+        .mt-2 { margin-top: 2px !important; }
+        .p-1 { padding: 2px !important; }
+        .p-2 { padding: 3px !important; }
     </style>
 </head>
 <body onload="window.print()">
     <div class="print-container">
         <!-- Header -->
-        <div class="header-grid">
-            <div class="logo-section">
-                @if(isset($company) && $company->logo_path)
-                    <img src="{{ asset('storage/' . $company->logo_path) }}" alt="Logo">
-                @else
-                    <h3>{{ $company->name ?? 'COMPANY NAME' }}</h3>
-                @endif
-            </div>
-            <div class="title-section">
-                <h1>By Job Card</h1>
-                <div>{{ $company->name ?? '' }}</div>
-                <div style="font-size:10px;">{{ $company->address ?? '' }}</div>
-            </div>
-            <div class="meta-section">
-                <div class="meta-row"><span>Job Card No.:</span> <strong>{{ $jobCard->job_no }}</strong></div>
-                <div class="meta-row"><span>Date:</span> <span>{{ $jobCard->created_at->format('d-m-Y') }}</span></div>
-                <div class="meta-row"><span>Doc No:</span> <span>PRD-FRM-01</span></div>
-                <div class="meta-row"><span>Rev:</span> <span>02</span></div>
-            </div>
+        <div style="border: 2px solid #000; margin-bottom: 1px;">
+            <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
+                <tr>
+                    <!-- Logo Section -->
+                    <td rowspan="2" style="width: 10%; border-right: 2px solid #000; padding: 4px; text-align: center; vertical-align: middle;">
+                        @if(isset($company) && $company->logo_path)
+                            @php
+                                $logoSrc = isset($isPdf) && $isPdf 
+                                    ? storage_path('app/public/' . $company->logo_path) 
+                                    : asset('storage/' . $company->logo_path);
+                            @endphp
+                            <img src="{{ $logoSrc }}" alt="Logo" style="max-width: 70px; max-height: 50px;">
+                        @else
+                            <div style="font-weight: bold; font-size: 10px;">QC</div>
+                        @endif
+                    </td>
+                    
+                    <!-- First Row: Job Card Title and Printing Date -->
+                    <td colspan="8" style="border-right: 2px solid #000; border-bottom: 2px solid #000; padding: 4px;">
+                        <div style="display: flex; justify-content: center; align-items: center; position: relative;">
+                            <h1 style="margin: 0; font-size: 16px; font-weight: bold; color: #0000CD; font-family: Arial, sans-serif;">Job Card</h1>
+                            <div style="position: absolute; right: 0; text-align: right; font-size: 9px;">
+                                <strong style="text-decoration: underline;">Printing Date:</strong> 
+                                <span style="margin-left: 5px; font-weight: bold;">{{ now()->format('d/m/Y') }}</span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                
+                <!-- Second Row: Document Details -->
+                <tr>
+                    <td style="border-right: 2px solid #000; padding: 2px; text-align: center; font-size: 8px; width: 11%; white-space: nowrap;">
+                        <strong>Document ID No</strong>
+                    </td>
+                    <td style="border-right: 2px solid #000; padding: 2px; text-align: center; font-size: 8px; width: 11%; white-space: nowrap;">
+                        <strong>QC/DI3A/025</strong>
+                    </td>
+                    <td style="border-right: 2px solid #000; padding: 2px; text-align: center; font-size: 8px; width: 8%; white-space: nowrap;">
+                        <strong>Rev. #</strong>
+                    </td>
+                    <td style="border-right: 2px solid #000; padding: 2px; text-align: center; font-size: 9px; font-weight: bold; width: 6%; white-space: nowrap;">
+                        {{ str_pad($jobCard->version - 1, 2, '0', STR_PAD_LEFT) }}
+                    </td>
+                    <td style="border-right: 2px solid #000; padding: 2px; text-align: center; font-size: 8px; width: 10%; white-space: nowrap;">
+                        <strong>Rev. Date</strong>
+                    </td>
+                    <td style="border-right: 2px solid #000; padding: 2px; text-align: center; font-size: 8px; width: 10%; white-space: nowrap;">
+                        <strong>{{ $jobCard->version > 1 ? $jobCard->updated_at->format('d-m-Y') : '-' }}</strong>
+                    </td>
+                    <td style="border-right: 2px solid #000; padding: 2px; text-align: center; font-size: 8px; width: 8%; white-space: nowrap;">
+                        <strong>Page #</strong>
+                    </td>
+                    <td style="padding: 2px; text-align: center; font-size: 8px; width: 8%; white-space: nowrap;">
+                        <strong>1 of 1</strong>
+                    </td>
+                </tr>
+            </table>
         </div>
+
 
         <!-- Customer & Item Info -->
         <div class="section-box">
             <div class="section-title">Job Information</div>
-            <div class="info-grid py-2">
-                <div class="info-item">
-                    <span class="info-label">Customer:</span>
-                    <span class="info-value font-weight-bold">{{ $jobCard->customer->name ?? '' }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Item Name:</span>
-                    <span class="info-value font-weight-bold">{{ $jobCard->item_name }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Item Code:</span>
-                    <span class="info-value">{{ $jobCard->item_code }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Carton Type:</span>
-                    <span class="info-value">{{ $jobCard->cartonType->name ?? '' }} ({{ $jobCard->cartonType->standard_code ?? '' }})</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Technical Instructions Grid -->
-        <div class="technical-grid">
-            <!-- Left Column: Corrugation -->
-            <div class="section-box">
-                <div class="section-title">Instruction for Corrugation Plant</div>
-                <div class="p-2">
-                    <div class="info-item">
-                        <span class="info-label">Size (Inner):</span>
-                        <span class="info-value font-weight-bold">
+            <div style="display: flex; padding: 3px; gap: 6px; align-items: center;">
+                <!-- Left: Customer and Item Info (Centered) -->
+                <div style="flex: 1; text-align: center;">
+                    <!-- Row 1: Customer Name -->
+                    <div style="margin-bottom: 4px;">
+                        <span style="font-weight: bold; font-size: 12px;">{{ $jobCard->customer->name ?? '' }}</span>
+                    </div>
+                    
+                    <!-- Row 2: Item Name and Item Code -->
+                    <div style="font-size: 10px; margin-bottom: 3px;">
+                        <span style="font-weight: 600;">Item Name:</span>
+                        <span>{{ $jobCard->item_name }}</span>
+                        <span style="margin-left: 15px; font-weight: 600;">Item Code:</span>
+                        <span>{{ $jobCard->item_code }}</span>
+                    </div>
+                    
+                    <!-- Row 3: Item Size with Tolerance -->
+                    @php
+                        $tolerance = ($jobCard->ply_type == 5) ? 5 : 3;
+                    @endphp
+                    <div style="font-size: 10px;">
+                        <span style="font-weight: 600;">Size:</span>
+                        <span style="font-weight: bold;">
                             {{ ($jobCard->uom == 'mm' ? number_format($jobCard->length, 0) : number_format($jobCard->length, 2)) }} x 
                             {{ ($jobCard->uom == 'mm' ? number_format($jobCard->width, 0) : number_format($jobCard->width, 2)) }} x 
                             {{ ($jobCard->uom == 'mm' ? number_format($jobCard->height, 0) : number_format($jobCard->height, 2)) }} 
                             {{ $jobCard->uom }}
                         </span>
+                        <span style="margin-left: 10px; font-style: italic; color: #d9534f; font-weight: 600; font-size: 9px;">
+                            (Tolerance: ±{{ $tolerance }} mm)
+                        </span>
                     </div>
-                    <!-- Tolerances -->
-                    @php
-                        $tolerance = ($jobCard->ply_type == 5) ? 5 : 3;
-                    @endphp
-                    <div class="tolerance-info mb-2 text-end">Tolerance: +/- {{ $tolerance }} mm</div>
-
-                    <div class="info-item">
-                        <span class="info-label">Score Lines:</span>
-                        {{-- Calculate Score Lines based on Height --}}
+                </div>
+                
+                <!-- Right: Job Card No Box + Design Preview (Side by Side) -->
+                <div style="display: flex; gap: 6px; align-items: center;">
+                    <!-- Job Card No Box (Left of Preview) -->
+                    <div style="border: 2px solid #000; padding: 4px 6px; font-size: 10px; font-weight: 600; background: #fff; white-space: nowrap; writing-mode: vertical-rl; text-orientation: mixed; height: 0.7in; display: flex; align-items: center; justify-content: center;">
+                        {{ $jobCard->job_no }}
+                    </div>
+                    
+                    <!-- Carton Design Preview Box (0.7" x 0.7") -->
+                    <div style="width: 0.7in; height: 0.7in; border: 2px solid #000; display: flex; align-items: center; justify-content: center; background: #f9f9f9;">
                         @php
-                            $flap = $jobCard->width / 2;
+                            $code = $jobCard->cartonType->standard_code ?? '';
+                            if ($code) {
+                                $exts = ['png', 'jpg', 'jpeg'];
+                                $foundPath = null;
+                                foreach ($exts as $ext) {
+                                    if (file_exists(public_path("images/fefco/{$code}.{$ext}"))) {
+                                        $foundPath = "images/fefco/{$code}.{$ext}";
+                                        break;
+                                    }
+                                }
+                                
+                                $previewSrc = null;
+                                if ($foundPath) {
+                                    $previewSrc = isset($isPdf) && $isPdf ? public_path($foundPath) : asset($foundPath);
+                                }
+                            }
                         @endphp
-                        <span class="info-value">{{ number_format($flap, 1) }} - {{ number_format($jobCard->height, 1) }} - {{ number_format($flap, 1) }}</span>
+                        @if($code && isset($previewSrc))
+                            <img src="{{ $previewSrc }}" 
+                                 style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                        @else
+                            <div style="text-align:center; font-size:8px; color:#666;">
+                                {{ $jobCard->cartonType->name ?? 'Design' }}<br>{{ $code }}
+                            </div>
+                        @endif
                     </div>
+                </div>
+            </div>
+        </div>
 
-                    <div class="info-item mt-2">
-                        <span class="info-label">Deckle Size:</span>
-                        <span class="info-value font-weight-bold">{{ $jobCard->deckle_size }} Inch</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Sheet Length:</span>
-                        <span class="info-value font-weight-bold">{{ $jobCard->sheet_length }} Inch</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">UPS:</span>
-                        <span class="info-value">{{ $jobCard->ups }}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Ply Type:</span>
-                        <span class="info-value font-weight-bold">{{ $jobCard->ply_type }}-Ply</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Slitting:</span>
-                        <span class="info-value">{{ $jobCard->slitting_creasing }}</span>
-                    </div>
+        <!-- Technical Instructions Grid - Always Stacked for A4 Fit consistency -->
+        <div class="technical-grid" style="display: block;">
+            <!-- Left Column: Corrugation -->
+            <div class="section-box">
+                <div class="section-title">Instruction for Corrugation Plant</div>
+                <div class="p-1">
+                    @if($jobCard->pieces_count > 1 && $jobCard->pieces->count() > 0)
+                        <!-- Multi-Piece Layout - 2 Column Piece Grid -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px;">
+                            @foreach($jobCard->pieces as $piece)
+                                <div style="border: 1px solid #000; padding: 6px;">
+                                    <div style="background: #e0e0e0; padding: 1px; margin-bottom: 2px; font-weight: bold; text-align: center; font-size: 9px;">
+                                        {{ $piece->piece_name ?: 'Piece ' . $piece->piece_number }}
+                                    </div>
+                                    
+                                    <!-- Size and Ply Header -->
+                                    <div style="text-align: center; margin-bottom: 2px; font-size: 8px;">
+                                        <strong>Size:</strong> {{ (int)$piece->length }} x {{ (int)$piece->width }} x {{ (int)$piece->height }} mm &nbsp; <strong>Ply:</strong> {{ $piece->ply_type }}-Ply
+                                    </div>
+                                    
+                                    <!-- Table for Deckle, Sheet Length, UPS -->
+                                    <table style="width: 100%; border-collapse: collapse; font-size: 8px; margin-bottom: 2px; border: 1px solid #000;">
+                                        <thead>
+                                            <tr style="background: #ddd;">
+                                                <th style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 1px; text-align: center; font-weight: bold;" rowspan="2">Deckle<br>Size</th>
+                                                <th style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 1px; text-align: center; font-weight: bold;" colspan="2">Sheet Length</th>
+                                                <th style="border-bottom: 1px solid #000; padding: 1px; text-align: center; font-weight: bold;" rowspan="2">UPS</th>
+                                            </tr>
+                                            <tr style="background: #ddd;">
+                                                <th style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 1px; text-align: center; font-weight: bold;">In Inches</th>
+                                                <th style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 1px; text-align: center; font-weight: bold;">In MM</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td style="border-right: 1px solid #000; padding: 1px; text-align: center; font-weight: bold;">{{ number_format($piece->deckle_size, 0) }}"</td>
+                                                <td style="border-right: 1px solid #000; padding: 1px; text-align: center; font-weight: bold;">{{ number_format($piece->sheet_length, 2) }}"</td>
+                                                <td style="border-right: 1px solid #000; padding: 1px; text-align: center; font-weight: bold;">{{ number_format($piece->sheet_length * 25.4, 0) }} mm</td>
+                                                <td style="padding: 1px; text-align: center; font-weight: bold;">{{ $piece->ups }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    
+                                    @php
+                                        $isRSCPlantPiece = (optional($jobCard->cartonType)->standard_code == '0201' && $piece->slitting_creasing == 'Plant Online');
+                                        $p_flap1 = $p_height = $p_flap2 = 0;
+                                        if ($isRSCPlantPiece) {
+                                            if ($piece->ply_type == 3) {
+                                                $p_flap1 = ($piece->width / 2) + 3;
+                                                $p_height = $piece->height + 8;
+                                                $p_flap2 = ($piece->width / 2) + 3;
+                                            } elseif ($piece->ply_type == 5) {
+                                                $p_flap1 = ($piece->width / 2) + 5;
+                                                $p_height = $piece->height + 10;
+                                                $p_flap2 = ($piece->width / 2) + 5;
+                                            }
+                                        }
+                                    @endphp
 
-                    <div class="mt-3">
-                        <strong style="text-decoration: underline;">Paper Structure:</strong>
-                        <table class="table-custom mt-1">
+                                    @if($isRSCPlantPiece && ($piece->ply_type == 3 || $piece->ply_type == 5))
+                                        <div style="margin-bottom: 2px;">
+                                            <div style="font-size: 8px; margin-bottom: 1px;"><strong>Slitting:</strong> {{ $piece->slitting_creasing }}</div>
+                                            <table style="width: 100%; border-collapse: collapse; border: 1px solid #000;">
+                                                <thead>
+                                                    <tr style="background: #f0f0f0;">
+                                                        <th style="border: 1px solid #000; padding: 0px 1px; text-align: center; font-size: 10px;">Flap # 1</th>
+                                                        <th style="border: 1px solid #000; padding: 0px 1px; text-align: center; font-size: 10px;">Height</th>
+                                                        <th style="border: 1px solid #000; padding: 0px 1px; text-align: center; font-size: 10px;">Flap # 2</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="border: 1px solid #000; padding: 1px; text-align: center; font-weight: bold; font-size: 12px;">{{ number_format($p_flap1, 0) }}</td>
+                                                        <td style="border: 1px solid #000; padding: 1px; text-align: center; font-weight: bold; font-size: 12px;">{{ number_format($p_height, 0) }}</td>
+                                                        <td style="border: 1px solid #000; padding: 1px; text-align: center; font-weight: bold; font-size: 12px;">{{ number_format($p_flap2, 0) }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    @else
+                                        <div style="font-size: 8px; margin-bottom: 2px;">
+                                            <strong>Slitting:</strong> {{ $piece->slitting_creasing ?? 'N/A' }} 
+                                            @if(($piece->slitting_creasing ?? '') != 'None')
+                                                &nbsp;&nbsp;
+                                                <strong>Score:</strong> {{ number_format($piece->width/2, 0) }}-{{ number_format($piece->height, 0) }}-{{ number_format($piece->width/2, 0) }}
+                                            @endif
+                                        </div>
+                                    @endif
+
+                                    @if($piece->layers->count() > 0)
+                                        <div class="mt-1">
+                                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1px;">
+                                                <strong style="font-size: 8px;">Paper Structure:</strong>
+                                            </div>
+                                            <table style="width: 100%; border-collapse: collapse; margin-top: 1px; font-size: 7px;">
+                                                <thead>
+                                                    <tr style="background: #f5f5f5;">
+                                                        <th style="border: 1px solid #999; padding: 1px; font-weight: bold; text-align: center;">L</th>
+                                                        <th style="border: 1px solid #999; padding: 1px; font-weight: bold; text-align: center;">Paper</th>
+                                                        <th style="border: 1px solid #999; padding: 1px; font-weight: bold; text-align: center;">GSM</th>
+                                                        <th style="border: 1px solid #999; padding: 1px; font-weight: bold; text-align: center;">F</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($piece->layers as $layer)
+                                                    <tr>
+                                                        <td style="border: 1px solid #999; padding: 1px; text-align: center;">{{ $layer->type }}</td>
+                                                        <td style="border: 1px solid #999; padding: 1px;">{{ $layer->paper_name }}</td>
+                                                        <td style="border: 1px solid #999; padding: 1px; text-align: center;">{{ $layer->gsm }}</td>
+                                                        <td style="border: 1px solid #999; padding: 1px; text-align: center;">{{ $layer->flute_type ?? '-' }}</td>
+                                                    </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    @endif
+
+                                    @if(!empty($piece->corrugation_instruction))
+                                    <div style="margin-top: 2px; padding: 2px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 2px;">
+                                        <strong style="color: #856404; font-size: 8px;">⚠ Plant Instr:</strong>
+                                        <div style="margin-top: 1px; font-size: 7px; color: #000; font-weight: bold; background: #fff; padding: 2px; border: 1px dashed #ffc107;">{{ $piece->corrugation_instruction }}</div>
+                                    </div>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <!-- Single Piece Layout - Standard Compact -->
+                        <div class="info-item">
+                            <span class="info-label" style="font-size: 10px;">Size (Inner):</span>
+                            <span class="info-value" style="font-size: 11px;">
+                                {{ ($jobCard->uom == 'mm' ? number_format($jobCard->length, 0) : number_format($jobCard->length, 2)) }} x 
+                                {{ ($jobCard->uom == 'mm' ? number_format($jobCard->width, 0) : number_format($jobCard->width, 2)) }} x 
+                                {{ ($jobCard->uom == 'mm' ? number_format($jobCard->height, 0) : number_format($jobCard->height, 2)) }} 
+                                {{ $jobCard->uom }}
+                                <span class="tolerance-info" style="font-size: 9px;">(Tol: {{ $jobCard->ply_type == 5 ? '+/- 5' : '+/- 3' }} mm)</span>
+                            </span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label" style="font-size: 10px;">Ply Type:</span>
+                            <span class="info-value" style="font-size: 11px;">{{ $jobCard->ply_type }}-Ply</span>
+                        </div>
+
+                        <!-- Technical Details Table -->
+                        <table class="table-custom mt-2 mb-2">
                             <thead>
-                                <tr>
-                                    <th>Layer</th>
-                                    <th>Paper</th>
-                                    <th>GSM</th>
-                                    <th>Flute</th>
+                                <tr style="background: #f0f0f0;">
+                                    <th>Deckle Size</th>
+                                    <th>Sheet Length (In)</th>
+                                    <th>Sheet Length (MM)</th>
+                                    <th>UPS</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($jobCard->layers as $layer)
                                 <tr>
-                                    <td>{{ $layer->type }}</td>
-                                    <td>{{ $layer->paper_name }}</td>
-                                    <td>{{ $layer->gsm }}</td>
-                                    <td>{{ $layer->flute_type }}</td>
+                                    <td style="font-weight: bold;">{{ number_format($jobCard->deckle_size, 0) }}"</td>
+                                    <td style="font-weight: bold;">{{ number_format($jobCard->sheet_length, 2) }}"</td>
+                                    <td style="font-weight: bold;">{{ number_format($jobCard->sheet_length * 25.4, 0) }} mm</td>
+                                    <td style="font-weight: bold;">{{ $jobCard->ups }}</td>
                                 </tr>
-                                @endforeach
                             </tbody>
                         </table>
-                    </div>
+
+                        <div class="info-item">
+                            <span class="info-label">Slitting:</span>
+                            <span class="info-value">{{ $jobCard->slitting_creasing }}</span>
+                        </div>
+
+                        @php
+                            $isRSCPlant = (optional($jobCard->cartonType)->standard_code == '0201' && $jobCard->slitting_creasing == 'Plant Online');
+                            if ($isRSCPlant && ($jobCard->ply_type == 3 || $jobCard->ply_type == 5)) {
+                                $s_flap1 = ($jobCard->width / 2) + ($jobCard->ply_type == 5 ? 5 : 3);
+                                $s_height = $jobCard->height + ($jobCard->ply_type == 5 ? 10 : 8);
+                                $s_flap2 = ($jobCard->width / 2) + ($jobCard->ply_type == 5 ? 5 : 3);
+                            }
+                        @endphp
+
+                        @if($isRSCPlant && ($jobCard->ply_type == 3 || $jobCard->ply_type == 5))
+                            <table style="width: 100%; border-collapse: collapse; margin-top: 4px; border: 1px solid #000;">
+                                <thead>
+                                    <tr style="background: #f0f0f0; font-size: 9px;">
+                                        <th style="border: 1px solid #000; padding: 1px;">Flap # 1</th>
+                                        <th style="border: 1px solid #000; padding: 1px;">Height</th>
+                                        <th style="border: 1px solid #000; padding: 1px;">Flap # 2</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="font-weight: bold; font-size: 11px; text-align: center;">
+                                        <td style="border: 1px solid #000; padding: 2px;">{{ number_format($s_flap1, 0) }}</td>
+                                        <td style="border: 1px solid #000; padding: 2px;">{{ number_format($s_height, 0) }}</td>
+                                        <td style="border: 1px solid #000; padding: 2px;">{{ number_format($s_flap2, 0) }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        @else
+                            <div class="info-item">
+                                <span class="info-label">Score Lines:</span>
+                                @php $flap = $jobCard->width / 2; @endphp
+                                <span class="info-value">{{ number_format($flap, 1) }} - {{ number_format($jobCard->height, 1) }} - {{ number_format($flap, 1) }}</span>
+                            </div>
+                        @endif
+
+                        <!-- Paper Structure Table -->
+                        <div style="margin-top: 8px;">
+                            <strong style="font-size: 11px;">Paper Structure:</strong>
+                            <table class="table-custom mt-1">
+                                <thead>
+                                    <tr style="background: #f5f5f5;">
+                                        <th>L</th>
+                                        <th>Paper</th>
+                                        <th>GSM</th>
+                                        <th>F</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($jobCard->layers as $layer)
+                                    <tr>
+                                        <td>{{ $layer->type }}</td>
+                                        <td style="text-align: left; padding-left: 5px;">{{ $layer->paper_name }}</td>
+                                        <td>{{ $layer->gsm }}</td>
+                                        <td>{{ $layer->flute_type ?? '-' }}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        @if(!empty($jobCard->corrugation_instruction))
+                        <div style="margin-top: 2px; padding: 2px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 2px;">
+                            <strong style="color: #856404; font-size: 8px;">⚠ Plant Instr:</strong>
+                            <div style="margin-top: 1px; font-size: 7px; color: #000; font-weight: bold; background: #fff; padding: 2px; border: 1px dashed #ffc107;">{{ $jobCard->corrugation_instruction }}</div>
+                        </div>
+                        @endif
+                    @endif
+
+
                 </div>
             </div>
 
             <!-- Right Column: Printing & Converting -->
             <div class="section-box">
                 <div class="section-title">Printing & Finishing Instruction</div>
-                <div class="p-2">
-                     <div class="info-item">
-                        <span class="info-label">Process Type:</span>
-                        <span class="info-value font-weight-bold">{{ $jobCard->process_type }}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Print Colors:</span>
-                        <span class="info-value">{{ $jobCard->print_colors }} Colors</span>
+                <div class="p-1">
+                    @if($jobCard->pieces_count > 1 && $jobCard->pieces->count() > 0)
+                        <!-- Multi-Piece Printing Layout -->
+                        <div style="display: flex; gap: 10px; margin-bottom: 1px; font-size: 8px; justify-content: center;">
+                            <div>
+                                <span style="font-weight: bold;">Process:</span>
+                                <span>{{ $jobCard->process_type }}</span>
+                            </div>
+                            <div>
+                                <span style="font-weight: bold;">Pasting:</span>
+                                <span>{{ $jobCard->pasting_type == 'None' ? 'No' : $jobCard->pasting_type }} {{ $jobCard->pasting_type == 'Staple' ? '('.$jobCard->staple_details.')' : '' }}</span>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-top: 2px;">
+                            @foreach($jobCard->pieces as $piece)
+                                <div style="border: 1px solid #999; padding: 3px;">
+                                    <div style="background: #f0f0f0; padding: 1px; margin-bottom: 1px; font-weight: bold; text-align: center; font-size: 8px;">
+                                        {{ $piece->piece_name ?: 'Piece ' . $piece->piece_number }}
+                                    </div>
+                                    
+                                    <div style="font-size: 7px; text-align: center;">
+                                        <div style="margin-bottom: 1px;">
+                                            <span style="font-weight: bold;">Printing:</span>
+                                            <span>
+                                                @if($piece->print_colors == 0)
+                                                    Un-Printed
+                                                @else
+                                                    {{ $piece->print_colors }} Color Printing
+                                                @endif
+                                            </span>
+                                            @if(!empty($piece->printing_data) && isset($piece->printing_data['inks']) && count($piece->printing_data['inks']) > 0)
+                                                &nbsp;|&nbsp;
+                                                <span style="color: #c00; font-weight: bold;">
+                                                @foreach($piece->printing_data['inks'] as $index => $inkId)
+                                                    @php $ink = \App\Models\Ink::find($inkId); @endphp
+                                                    {{ $ink ? $ink->color_name . ($ink->color_code ? ' ['.$ink->color_code.']' : '') : 'Ink' }}{{ $index < count($piece->printing_data['inks']) - 1 ? ', ' : '' }}
+                                                @endforeach
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div style="margin-bottom: 1px;">
+                                            <span style="font-weight: bold;">Packing:</span>
+                                            <span>{{ $piece->packing_bundle_qty ?? 'N/A' }} / bundle {{ $piece->packing_type ? '('.$piece->packing_type.')' : '' }}</span>
+                                        </div>
+                                    </div>
+                                    @if(!empty($piece->printing_instruction))
+                                    <div style="margin-top: 2px; padding: 2px; background: #e7f3ff; border: 1px solid #007bff; border-radius: 2px;">
+                                        <strong style="color: #004085; font-size: 7px;">ℹ Print:</strong>
+                                        <div style="margin-top: 1px; font-size: 6px; color: #000; font-weight: bold; background: #fff; padding: 2px; border: 1px dashed #007bff;">{{ $piece->printing_instruction }}</div>
+                                    </div>
+                                    @endif
+
+                                    @if(!empty($piece->finishing_instruction))
+                                    <div style="margin-top: 1px; padding: 2px; background: #d4edda; border: 1px solid #28a745; border-radius: 2px;">
+                                        <strong style="color: #155724; font-size: 7px;">✂ Finish:</strong>
+                                        <div style="margin-top: 1px; font-size: 6px; color: #000; font-weight: bold; background: #fff; padding: 2px; border: 1px dashed #28a745;">{{ $piece->finishing_instruction }}</div>
+                                    </div>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <!-- Single Piece Printing Layout - Standard Compact -->
+                        <div class="info-item">
+                            <span class="info-label">Process Type:</span>
+                            <span class="info-value">{{ $jobCard->process_type }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Pasting Type:</span>
+                            <span class="info-value">{{ $jobCard->pasting_type }} {{ $jobCard->pasting_type == 'Staple' ? '('.$jobCard->staple_details.')' : '' }}</span>
+                        </div>
+                        
+                        <div class="info-item mt-2">
+                            <span class="info-label">Printing:</span>
+                            <span class="info-value">
+                                <span style="font-weight: bold;">
+                                    @if($jobCard->print_colors == 0)
+                                        Un-Printed
+                                    @else
+                                        {{ $jobCard->print_colors }} Color Printing
+                                    @endif
+                                </span>
+                                @if(!empty($jobCard->printing_data) && isset($jobCard->printing_data['inks']) && count($jobCard->printing_data['inks']) > 0)
+                                    <span style="color: #c00; font-weight: bold; margin-left: 10px;">
+                                    @foreach($jobCard->printing_data['inks'] as $index => $inkId)
+                                        @php $ink = \App\Models\Ink::find($inkId); @endphp
+                                        {{ $ink ? $ink->color_name . ($ink->color_code ? ' ['.$ink->color_code.']' : '') : 'Ink' }}{{ $index < count($jobCard->printing_data['inks']) - 1 ? ', ' : '' }}
+                                    @endforeach
+                                    </span>
+                                @endif
+                            </span>
+                        </div>
+
+                        <div class="info-item mt-1">
+                            <span class="info-label">Packing:</span>
+                            <span class="info-value">
+                                {{ $jobCard->packing_bundle_qty ?? 'N/A' }} / bundle 
+                                @if($jobCard->packing_type) ({{ $jobCard->packing_type }}) @endif
+                            </span>
+                        </div>
+                    @endif
+
+
+                    <!-- Special Add-ons Block -->
+                    <div class="section-box mt-1">
+                        <div class="section-title">Special Add-ons</div>
+                        <div class="p-1">
+                            <!-- Honeycomb -->
+                             <div class="mb-1" style="font-size: 8px;">
+                                 <span style="font-weight: bold;">Honeycomb:</span>&nbsp;&nbsp;&nbsp;
+                                 @if(!empty($jobCard->special_details['honeycomb']) && !empty($jobCard->special_details['honeycomb']['holes']))
+                                     @php $h = $jobCard->special_details['honeycomb']; @endphp
+                                     {{ ($h['length'] ?? '-') }}x{{ ($h['width'] ?? '-') }}x{{ ($h['height'] ?? '-') }} {{ $h['uom'] ?? '' }}, 
+                                     {{ $h['plies'] ?? '-' }}-Ply, 
+                                     {{ $h['holes'] ?? '-' }} holes,
+                                     @if(!empty($h['material']))
+                                         {{ $h['material'] }},
+                                     @endif
+                                     {{ ucfirst($h['source'] ?? '-') }}
+                                     @if(($h['source'] ?? '') == 'outsource') - {{ $h['supplier_name'] ?? 'N/A' }} @endif
+                                 @else
+                                     <span style="color: #000;">N/A</span>
+                                 @endif
+                             </div>
+                             
+                             <!-- Separator -->
+                             <div style="font-size: 8px;">
+                                 <span style="font-weight: bold;">Separator:</span>&nbsp;&nbsp;&nbsp;
+                                 @if(!empty($jobCard->special_details['separator']) && !empty($jobCard->special_details['separator']['length']))
+                                     @php $s = $jobCard->special_details['separator']; @endphp
+                                     {{ ($s['length'] ?? '-') }}x{{ ($s['width'] ?? '-') }} {{ $s['uom'] ?? '' }}, 
+                                     {{ $s['plies'] ?? '-' }}-Ply, 
+                                     {{ ucfirst($s['source'] ?? '-') }}
+                                     @if(($s['source'] ?? '') == 'outsource') - {{ $s['supplier_name'] ?? 'N/A' }} @endif
+                                 @else
+                                     <span style="color: #000;">N/A</span>
+                                 @endif
+                             </div>
+                        </div>
                     </div>
                     
-                    @if(!empty($jobCard->printing_data) && isset($jobCard->printing_data['inks']))
-                        <div class="mt-2 mb-2">
-                            <strong>Inks:</strong>
-                            <ul style="margin: 0; padding-left: 20px;">
-                            @foreach($jobCard->printing_data['inks'] as $inkId)
-                                @php $ink = \App\Models\Ink::find($inkId); @endphp
-                                <li>{{ $ink ? $ink->color_name . ' (' . $ink->color_code . ')' : 'Unknown' }}</li>
-                            @endforeach
-                            </ul>
+
+
+                    <!-- Global Instructions (Only for Single Piece) -->
+                    @if($jobCard->pieces_count <= 1)
+                        <!-- Global Printing Instruction -->
+                        @if(!empty($jobCard->printing_instruction))
+                        <div style="margin-top: 2px; padding: 2px; background: #e7f3ff; border: 1px solid #007bff; border-radius: 2px;">
+                            <strong style="color: #004085; font-size: 8px;">ℹ Printing Instr:</strong>
+                            <div style="margin-top: 1px; font-size: 7px; color: #000; font-weight: bold; background: #fff; padding: 2px; border: 1px dashed #007bff;">{{ $jobCard->printing_instruction }}</div>
                         </div>
-                    @endif
-
-                    <div class="info-item mt-3">
-                        <span class="info-label">Pasting:</span>
-                        <span class="info-value">{{ $jobCard->pasting_type }} {{ $jobCard->pasting_type == 'Staple' ? '('.$jobCard->staple_details.')' : '' }}</span>
-                    </div>
-
-                    @if(isset($jobCard->special_details['honeycomb']) || isset($jobCard->special_details['separator']))
-                        <div class="mt-3">
-                            <strong style="text-decoration: underline;">Special Add-ons:</strong>
-                            @if(isset($jobCard->special_details['honeycomb']))
-                                <div class="mt-1">
-                                    <strong>Honeycomb:</strong> {{ $jobCard->special_details['honeycomb'] }}
-                                </div>
-                            @endif
-                            @if(isset($jobCard->special_details['separator']))
-                                <div class="mt-1">
-                                    <strong>Separator:</strong> {{ $jobCard->special_details['separator'] }}
-                                </div>
-                            @endif
+                        @endif
+                        
+                        <!-- Global Finishing Instruction -->
+                        @if(!empty($jobCard->finishing_instruction))
+                        <div style="margin-top: 2px; padding: 2px; background: #d4edda; border: 1px solid #28a745; border-radius: 2px;">
+                            <strong style="color: #155724; font-size: 8px;">✂ Finishing Instr:</strong>
+                            <div style="margin-top: 1px; font-size: 7px; color: #000; font-weight: bold; background: #fff; padding: 2px; border: 1px dashed #28a745;">{{ $jobCard->finishing_instruction }}</div>
                         </div>
+                        @endif
                     @endif
-
-                    <div class="info-item mt-3">
-                        <span class="info-label">Packing:</span>
-                        <span class="info-value">{{ $jobCard->packing_bundle_qty }} Cartons / Bundle</span>
-                    </div>
-
-                    <div class="mt-3 p-2 bg-light border">
-                        <strong>Reel Size Recommendation:</strong>
-                        <br>
-                        @php
-                            // Logic: Deckle Size (mm) / 25.4 = Inch. Recommended Reel is Deckle Size.
-                            $deckleInch = $jobCard->deckle_size / 25.4;
-                        @endphp
-                        Reel Size: {{ number_format($deckleInch, 1) }} Inch ({{ $jobCard->deckle_size }} mm)
-                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="section-box flex-grow-1">
-            <div class="section-title">Remarks</div>
-            <div class="p-2">
-                {{ $jobCard->remarks }}
+        <div class="section-box flex-grow-1" style="min-height: 3mm;">
+            <div class="section-title">General Remarks</div>
+            <div class="p-1" style="font-size: 8px; font-weight: bold;">
+                {{ $jobCard->remarks ?: 'N/A' }}
             </div>
         </div>
 
-        <div class="footer-sig">
-            <div class="sig-box">Prepared By</div>
-            <div class="sig-box">Verified By</div>
-            <div class="sig-box">Approved By</div>
+        <div style="margin-top: auto;">
+            <div class="footer-sig" style="border-top: 1px solid #000; padding: 1px 30px 2px 30px; margin-top: 2px;">
+                <div class="sig-box">Prepared</div>
+                <div class="sig-box">Verified</div>
+                <div class="sig-box">Approved</div>
+            </div>
         </div>
     </div>
 </body>

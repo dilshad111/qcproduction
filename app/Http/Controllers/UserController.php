@@ -59,6 +59,47 @@ class UserController extends Controller
         return redirect()->route('users.index')->with('success', 'User rights updated.');
     }
 
+    public function edit(User $user)
+    {
+        return view('users.edit', compact('user'));
+    }
+
+    public function update(Request $request, User $user)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|confirmed|min:6',
+            'role' => 'required'
+        ]);
+
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'role' => $request->role,
+        ];
+
+        if ($request->password) {
+            $data['password'] = Hash::make($request->password);
+        }
+
+        $user->update($data);
+
+        return redirect()->route('users.index')->with('success', 'User updated successfully.');
+    }
+
+    public function destroy(User $user)
+    {
+        // Prevent deleting yourself if you're an admin
+        if ($user->isAdmin() && auth()->id() === $user->id) {
+            return redirect()->route('users.index')->with('error', 'You cannot delete yourself.');
+        }
+
+        $user->delete();
+
+        return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+    }
+
     public function updateTheme(Request $request)
     {
         $user = auth()->user();

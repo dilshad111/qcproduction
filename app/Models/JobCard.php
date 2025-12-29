@@ -12,10 +12,11 @@ class JobCard extends Model implements Auditable
     use \OwenIt\Auditing\Auditable;
 
     protected $fillable = [
-        'job_no', 'customer_id', 'carton_type_id', 'item_name', 'item_code', 'uom',
+        'job_no', 'version', 'is_active', 'customer_id', 'carton_type_id', 'pieces_count', 'item_name', 'item_code', 'uom',
         'length', 'width', 'height', 'deckle_size', 'sheet_length', 'ups',
         'ply_type', 'slitting_creasing', 'print_colors', 'printing_data', 'pasting_type',
-        'staple_details', 'special_details', 'process_type', 'packing_bundle_qty', 'remarks'
+        'staple_details', 'special_details', 'process_type', 'packing_bundle_qty', 'packing_type', 'remarks',
+        'corrugation_instruction', 'printing_instruction', 'finishing_instruction', 'revision_note'
     ];
 
     protected $casts = [
@@ -35,6 +36,11 @@ class JobCard extends Model implements Auditable
 
     public function layers()
     {
-        return $this->hasMany(JobCardLayer::class)->orderBy('layer_order');
+        return $this->hasMany(JobCardLayer::class)->whereNull('piece_id')->orderBy('layer_order');
+    }
+
+    public function pieces()
+    {
+        return $this->hasMany(JobCardPiece::class)->orderBy('piece_number');
     }
 }

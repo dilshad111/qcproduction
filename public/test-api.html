@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Job Card API Test</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h1>Job Card API Test</h1>
+    <p>Customer ID 1 (Getz Pharma):</p>
+    <button onclick="testAPI()">Test API Call</button>
+    <pre id="result"></pre>
+
+    <script>
+        function testAPI() {
+            const url = '/api/customer/1/jobs';
+            document.getElementById('result').textContent = 'Loading from: ' + url + '\n\n';
+            
+            axios.get(url)
+                .then(function(response) {
+                    document.getElementById('result').textContent += 'SUCCESS!\n\n' + JSON.stringify(response.data, null, 2);
+                })
+                .catch(function(error) {
+                    document.getElementById('result').textContent += 'ERROR!\n\n' + error.message + '\n\n' + JSON.stringify(error.response, null, 2);
+                });
+        }
+    </script>
+</body>
+</html>

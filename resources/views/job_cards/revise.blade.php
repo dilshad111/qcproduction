@@ -175,8 +175,8 @@
     }
 </style>
 <div class="container">
-    <h2>Edit Job Card: {{ $jobCard->customer->name }} - {{ $jobCard->item_name }}</h2>
-    <p class="text-muted">Job Card No: {{ $jobCard->job_no }}</p>
+    <h2>Revise Job Card: {{ $jobCard->customer->name }} - {{ $jobCard->item_name }}</h2>
+    <p class="text-muted">Job Card No: {{ $jobCard->job_no }} (Current Version: {{ $jobCard->version }})</p>
     
     @if(session('error'))
         <div class="alert alert-danger">{{ session('error') }}</div>
@@ -192,9 +192,20 @@
         </div>
     @endif
 
-    <form action="{{ route('job-cards.update', $jobCard->id) }}" method="POST" id="jobCardForm">
+    <form action="{{ route('job-cards.revise.store', $jobCard->id) }}" method="POST" id="jobCardForm">
         @csrf
-        @method('PUT')
+        
+        <!-- REVISION NOTE -->
+        <div class="card mb-3 border-warning border-2">
+            <div class="card-header bg-warning">Revision Details</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="text-dark">Reason for Revision / Change Request Details <span class="text-danger">*</span></label>
+                    <textarea name="revision_note" class="form-control" rows="3" placeholder="Explain what changed (e.g., Size increased by 5mm as per customer request, changed paper grade...)" required></textarea>
+                    <small class="text-muted">This note will be saved in the version history.</small>
+                </div>
+            </div>
+        </div>
         
         <!-- BASIC INFO -->
         <div class="card mb-3">
@@ -337,7 +348,12 @@
                             </select>
                         </div>
                     </div>
-
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label>Corrugation Special Instruction</label>
+                            <textarea name="corrugation_instruction" class="form-control" rows="2" placeholder="Instructions for Corrugation Plant...">{{ old('corrugation_instruction', $jobCard->corrugation_instruction) }}</textarea>
+                        </div>
+                    </div>
 
                     <!-- PAPER STRUCTURE LOGIC -->
                     <div class="card mb-3" id="paper-structure-card" style="display:none;">
@@ -377,7 +393,12 @@
                     </select>
                 </div>
                 <div id="ink-fields-container" class="row"></div>
-
+                <div class="row mt-3">
+                    <div class="col-md-12 mb-3">
+                        <label>Printing Special Instruction</label>
+                        <textarea name="printing_instruction" class="form-control" rows="2" placeholder="Instructions for Printing Department...">{{ old('printing_instruction', $jobCard->printing_instruction) }}</textarea>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -545,7 +566,12 @@
                      </div>
                 </div>
 
-
+                 <div class="row mt-3" id="global_finishing_instruction_row">
+                    <div class="col-md-12 mb-3">
+                        <label>Finishing Special Instruction</label>
+                        <textarea name="finishing_instruction" class="form-control" rows="2" placeholder="Instructions for Finishing/Pasting...">{{ old('finishing_instruction', $jobCard->finishing_instruction) }}</textarea>
+                    </div>
+                </div>
 
                 <div id="main_packing_div" style="display: {{ $jobCard->pieces_count > 1 ? 'none' : 'block' }};">
                     <div class="row">
@@ -563,32 +589,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- DEPARTMENT INSTRUCTIONS (Always Visible) -->
-        <div class="card mb-3" id="global_instructions_card">
-            <div class="card-header">Department Special Instructions</div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-12 mb-3">
-                        <label>Corrugation Special Instruction</label>
-                        <textarea name="corrugation_instruction" class="form-control" rows="2" placeholder="Instructions for Corrugation Plant...">{{ old('corrugation_instruction', $jobCard->corrugation_instruction) }}</textarea>
-                    </div>
-                    <div class="col-md-12 mb-3">
-                        <label>Printing Special Instruction</label>
-                        <textarea name="printing_instruction" class="form-control" rows="2" placeholder="Instructions for Printing Department...">{{ old('printing_instruction', $jobCard->printing_instruction) }}</textarea>
-                    </div>
-                    <div class="col-md-12 mb-3">
-                        <label>Finishing Special Instruction</label>
-                        <textarea name="finishing_instruction" class="form-control" rows="2" placeholder="Instructions for Finishing/Pasting...">{{ old('finishing_instruction', $jobCard->finishing_instruction) }}</textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card mb-3">
-            <div class="card-header">Additional Remarks</div>
-            <div class="card-body">
                 <div class="mb-3">
                     <label>Remarks</label>
                     <textarea name="remarks" class="form-control">{{ old('remarks', $jobCard->remarks) }}</textarea>
@@ -596,7 +596,7 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary btn-lg">Update Job Card</button>
+        <button type="submit" class="btn btn-primary btn-lg">Save New Version (Revise)</button>
     </form>
 
     <!-- Die-Line Preview Modal -->
@@ -788,26 +788,18 @@
 
     // Render Ink Fields (Single Piece)
     function renderInkFields() {
-        const select = document.getElementById('print_colors');
-        if(!select) return;
-        
-        const count = parseInt(select.value) || 0;
+        const count = document.getElementById('print_colors').value;
         const container = document.getElementById('ink-fields-container');
-        if(!container) return;
-        
         container.innerHTML = '';
         
         let currentInks = (existingPrintingData && existingPrintingData.inks) ? existingPrintingData.inks : [];
-        if (!Array.isArray(currentInks)) currentInks = [];
 
         for(let i=0; i<count; i++) {
             let options = '<option value="">Select Ink</option>';
-            if(Array.isArray(inks)) {
-                inks.forEach(ink => {
-                    const isSelected = (currentInks[i] && currentInks[i] == ink.id) ? 'selected' : '';
-                    options += `<option value="${ink.id}" ${isSelected}>${ink.color_name} (${ink.color_code})</option>`;
-                });
-            }
+            inks.forEach(ink => {
+                const selected = (currentInks[i] == ink.id) ? 'selected' : '';
+                options += `<option value="${ink.id}" ${selected}>${ink.color_name} (${ink.color_code})</option>`;
+            });
 
             let html = `
                 <div class="col-md-4 mb-2">
@@ -857,14 +849,14 @@
             multi.style.display = 'block';
             if (printCard) printCard.style.display = 'none';
             document.getElementById('main_packing_div').style.display = 'none';
-            document.getElementById('global_instructions_card').style.display = 'none';
+            document.getElementById('global_finishing_instruction_row').style.display = 'none';
             generatePieceTabs(count);
         } else {
             single.style.display = 'block';
             multi.style.display = 'none';
             if (printCard) printCard.style.display = 'block';
             document.getElementById('main_packing_div').style.display = 'block';
-            document.getElementById('global_instructions_card').style.display = 'block';
+            document.getElementById('global_finishing_instruction_row').style.display = 'block';
         }
     }
 
@@ -952,7 +944,7 @@
                         </select>
                     </div>
                 </div>
-
+                
                 <!-- Slitting Creasing -->
                 <div class="row">
                     <div class="col-md-12 mb-3">
@@ -1030,28 +1022,16 @@
         });
     }
 
-    function renderPieceInkFields(index, count = 0, currentInks = []) {
+    function renderPieceInkFields(index, count, currentInks = []) {
         const container = document.getElementById(`piece${index}_ink_fields`);
         if (!container) return;
-        
         container.innerHTML = '';
-        count = parseInt(count) || 0;
-        
         if (count == 0) return;
         
-        if (!Array.isArray(currentInks)) currentInks = [];
-
         for (let i = 0; i < count; i++) {
             let options = '<option value="">Select Ink</option>';
-            if(Array.isArray(inks)) {
-                inks.forEach(ink => {
-                    const isSelected = (currentInks[i] && currentInks[i] == ink.id) ? 'selected' : '';
-                    options += `<option value="${ink.id}" ${isSelected}>${ink.color_name} (${ink.color_code})</option>`;
-                });
-            }
-
-            const html = `<div class="col-md-4 mb-2"><label>Ink ${i+1}</label><select name="pieces[${index}][printing_data][inks][]" class="form-control form-control-sm">${options}</select></div>`;
-            container.insertAdjacentHTML('beforeend', html);
+            inks.forEach(ink => options += `<option value="${ink.id}" ${currentInks[i] == ink.id ? 'selected' : ''}>${ink.color_name}</option>`);
+            container.insertAdjacentHTML('beforeend', `<div class="col-md-4 mb-2"><label>Ink ${i+1}</label><select name="pieces[${index}][printing_data][inks][]" class="form-control form-control-sm">${options}</select></div>`);
         }
     }
 
