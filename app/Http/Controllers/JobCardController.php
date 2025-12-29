@@ -351,27 +351,6 @@ class JobCardController extends Controller
         return view('job_cards.print', compact('jobCard'));
     }
 
-    public function download($id)
-    {
-        // Increase execution time for complex PDF generation
-        ini_set('max_execution_time', 300);
-        
-        $jobCard = JobCard::with('customer', 'cartonType', 'layers', 'pieces.layers')->findOrFail($id);
-        
-        // Use the simplified PDF template designed for dompdf
-        $pdf = PDF::loadView('job_cards.print_pdf', compact('jobCard'))
-                  ->setPaper('a4', 'portrait')
-                  ->setOptions([
-                      'isHtml5ParserEnabled' => true, 
-                      'isRemoteEnabled' => false,
-                      'isPhpEnabled' => false,
-                      'dpi' => 96,
-                      'defaultFont' => 'DejaVu Sans'
-                  ]);
-        
-        return $pdf->download('JobCard-'.$jobCard->job_no.'.pdf');
-    }
-
     public function history($id)
     {
         $jobCard = JobCard::findOrFail($id);

@@ -46,13 +46,31 @@
         }
         
         .doc-title-bar {
-            background: #000;
+            background: linear-gradient(to bottom, #4d4d4d 0%, #000000 100%);
             color: #fff;
             text-align: center;
             font-size: 16px;
             font-weight: bold;
             padding: 5px;
             margin: 2px 0;
+            border-radius: 6px;
+            border: 1px solid #000;
+            -webkit-print-color-adjust: exact;
+        }
+
+        .premium-heading {
+            background: linear-gradient(to bottom, #4d4d4d 0%, #000000 100%);
+            color: #fff !important;
+            font-weight: bold;
+            padding: 3px 10px;
+            border-radius: 5px;
+            text-align: left;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            display: block;
+            border: 1px solid #000;
+            -webkit-print-color-adjust: exact;
         }
         
         .main-info-table th {
@@ -207,49 +225,49 @@
             <div style="display: flex; border: 1px solid #000; margin-top: -1px;">
                 @foreach($issue->jobCard->pieces as $index => $piece)
                     <div style="flex: 1; {{ $index == 0 ? 'border-right: 1px solid #000;' : '' }}">
-                        <table>
+                        <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
                             <tr>
-                                <td colspan="2" class="piece-header">{{ $piece->piece_name ?: 'Piece ' . ($index + 1) }}</td>
+                                <td colspan="2" class="piece-header" style="font-size: 13px; padding: 4px;">{{ $piece->piece_name ?: 'Piece ' . ($index + 1) }}</td>
                             </tr>
                             <tr>
-                                <td class="font-bold" style="width: 40%;">Ply:</td>
-                                <td class="text-center">{{ $piece->ply_type }}-Ply</td>
+                                <td class="font-bold" style="width: 40%; padding: 3px 5px;">Ply:</td>
+                                <td class="text-center" style="padding: 3px 5px;">{{ $piece->ply_type }}-Ply</td>
                             </tr>
                             <tr>
-                                <td class="font-bold">Dimensions (L×W×H):</td>
-                                <td class="text-center">{{ (int)$piece->length }}x{{ (int)$piece->width }}x{{ (int)$piece->height }} mm</td>
+                                <td class="font-bold" style="padding: 3px 5px;">Dimensions (L×W×H):</td>
+                                <td class="text-center" style="padding: 3px 5px;">{{ (int)$piece->length }}x{{ (int)$piece->width }}x{{ (int)$piece->height }} mm</td>
                             </tr>
                             <tr>
-                                <td class="font-bold">Deckle Size inch</td>
-                                <td class="text-center">{{ $piece->deckle_size }}"</td>
+                                <td class="font-bold" style="padding: 3px 5px;">Deckle Size inch</td>
+                                <td class="text-center" style="padding: 3px 5px;">{{ $piece->deckle_size }}"</td>
                             </tr>
                             <tr>
-                                <td class="font-bold">Sheet Length inch</td>
-                                <td class="text-center">{{ $piece->sheet_length }}" | {{ round($piece->sheet_length * 25.4) }} mm</td>
+                                <td class="font-bold" style="padding: 3px 5px;">Sheet Length inch</td>
+                                <td class="text-center" style="padding: 3px 5px;">{{ $piece->sheet_length }}" | {{ round($piece->sheet_length * 25.4) }} mm</td>
                             </tr>
                             <tr>
-                                <td class="font-bold">UPS</td>
-                                <td class="text-center">{{ $piece->ups }}</td>
+                                <td class="font-bold" style="padding: 3px 5px;">UPS</td>
+                                <td class="text-center" style="padding: 3px 5px;">{{ $piece->ups }}</td>
                             </tr>
                             <tr>
-                                <td class="font-bold">Construction:</td>
-                                <td style="font-size: 9px; line-height: 1;">
+                                <td class="font-bold" style="padding: 3px 5px;">Construction:</td>
+                                <td style="font-size: 10px; line-height: 1.2; padding: 3px 5px;">
                                     @foreach($piece->layers as $layer)
                                         {{ $layer->paper_name }} ({{ $layer->gsm }}){{ !$loop->last ? ' | ' : '' }}
                                     @endforeach
                                 </td>
                             </tr>
                             <tr>
-                                <td class="font-bold">Carton Quantity</td>
-                                <td class="text-center">{{ number_format($issue->order_qty_cartons) }} Cartons</td>
+                                <td class="font-bold" style="padding: 3px 5px;">Carton Quantity</td>
+                                <td class="text-center" style="padding: 3px 5px; font-weight: bold;">{{ number_format($issue->order_qty_cartons) }} Cartons</td>
                             </tr>
                             <tr>
-                                <td class="font-bold">Sheet Quantity</td>
+                                <td class="font-bold" style="padding: 3px 5px;">Sheet Quantity</td>
                                 @php
                                     $pUps = $piece->ups > 0 ? $piece->ups : 1;
                                     $pSheets = ceil($issue->order_qty_cartons / $pUps);
                                 @endphp
-                                <td class="text-center">{{ number_format($pSheets) }} Sheets</td>
+                                <td class="text-center" style="padding: 3px 5px; font-weight: bold;">{{ number_format($pSheets) }} Sheets</td>
                             </tr>
                         </table>
                     </div>
@@ -293,11 +311,13 @@
             <table class="data-table" style="margin-top: 10px; table-layout: fixed; width: 100%;">
                 <thead>
                     <tr>
-                        <th colspan="16" style="background: #333; color: #fff; text-align: center; padding: 4px; font-size: 10px;">CORRUGATION PLANT</th>
+                        <th colspan="16" style="padding: 2px; border: none; background: transparent;">
+                            <div class="premium-heading">2. CORRUGATION PLANT</div>
+                        </th>
                     </tr>
                     <tr>
                         @foreach($issue->jobCard->pieces as $index => $piece)
-                            <th colspan="8" style="background: #fff; text-align: center; padding: 3px; font-size: 9px; font-weight: bold; {{ $index == 0 ? 'border-right: 2px solid #000;' : '' }}">
+                            <th colspan="8" style="background: #fff; text-align: center; padding: 4px; font-size: 11px; font-weight: bold; {{ $index == 0 ? 'border-right: 2px solid #000;' : '' }}">
                                 {{ $piece->piece_name ?: 'Piece ' . ($index + 1) }}
                                 &nbsp;&nbsp;|&nbsp;&nbsp;
                                 {{ number_format($piece->deckle_size, 0) }}"
@@ -310,21 +330,27 @@
                     </tr>
                     <tr>
                         @foreach($issue->jobCard->pieces as $index => $piece)
-                            <th style="background: #000; color: #fff; width: 6.25%; padding: 2px; font-size: 8px;">Glue</th>
-                            <th style="background: #fff; width: 6.25%; padding: 2px; font-size: 8px;">Starch</th>
-                            <th style="background: #000; color: #fff; width: 6.25%; padding: 2px; font-size: 8px; line-height: 1.1;">Job Start<br>Time</th>
+                            <th style="background: #000; color: #fff; width: 6.25%; padding: 2px; font-size: 9px;">Glue</th>
+                            <th style="background: #fff; width: 6.25%; padding: 2px; font-size: 9px;">Starch</th>
+                            <th style="background: #000; color: #fff; width: 6.25%; padding: 3px 2px; font-size: 9px; white-space: nowrap;" colspan="2">Job Start Time</th>
                             <th style="background: #fff; width: 6.25%; padding: 2px;"></th>
-                            <th style="background: #000; color: #fff; width: 6.25%; padding: 2px; font-size: 8px; line-height: 1.1;">Job End<br>Time</th>
-                            <th style="background: #fff; width: 6.25%; padding: 2px;"></th>
-                            <th style="background: #000; color: #fff; width: 6.25%; padding: 2px; font-size: 8px; line-height: 1.1;">Sheet<br>Produced</th>
+                            <th style="background: #000; color: #fff; width: 6.25%; padding: 3px 2px; font-size: 9px; white-space: nowrap;" colspan="2">Job End Time</th>
                             <th style="background: #fff; width: 6.25%; padding: 2px; {{ $index == 0 ? 'border-right: 2px solid #000;' : '' }}"></th>
                         @endforeach
                     </tr>
                 </thead>
                 <tbody>
-                    <tr style="height: 16px;">
+                    <tr style="height: 14px;">
                         @foreach($issue->jobCard->pieces as $index => $piece)
-                            <td style="font-weight: bold; background: #f2f2f2; padding: 2px; font-size: 8px;">Reel #</td>
+                            <td style="font-weight: bold; background: #000; color: #fff; padding: 2px; font-size: 10px;" colspan="2">Sheet Produced</td>
+                            <td style="padding: 2px;" colspan="2"></td>
+                            <td style="font-weight: bold; background: #000; color: #fff; padding: 2px; font-size: 10px;" colspan="2">Sheet Wastage</td>
+                            <td style="padding: 2px; {{ $index == 0 ? 'border-right: 2px solid #000;' : '' }}" colspan="2"></td>
+                        @endforeach
+                    </tr>
+                    <tr style="height: 18px;">
+                        @foreach($issue->jobCard->pieces as $index => $piece)
+                            <td style="font-weight: bold; background: #f2f2f2; padding: 2px; font-size: 10px;">Reel #</td>
                             <td style="padding: 2px;"></td>
                             <td style="padding: 2px;"></td>
                             <td style="padding: 2px;"></td>
@@ -334,9 +360,9 @@
                             <td style="padding: 2px; {{ $index == 0 ? 'border-right: 2px solid #000;' : '' }}"></td>
                         @endforeach
                     </tr>
-                    <tr style="height: 16px;">
+                    <tr style="height: 18px;">
                         @foreach($issue->jobCard->pieces as $index => $piece)
-                            <td style="font-weight: bold; background: #f2f2f2; padding: 2px; font-size: 8px;">Size</td>
+                            <td style="font-weight: bold; background: #f2f2f2; padding: 2px; font-size: 10px;">Size</td>
                             <td style="padding: 2px;"></td>
                             <td style="padding: 2px;"></td>
                             <td style="padding: 2px;"></td>
@@ -346,9 +372,9 @@
                             <td style="padding: 2px; {{ $index == 0 ? 'border-right: 2px solid #000;' : '' }}"></td>
                         @endforeach
                     </tr>
-                    <tr style="height: 16px;">
+                    <tr style="height: 18px;">
                         @foreach($issue->jobCard->pieces as $index => $piece)
-                            <td style="font-weight: bold; background: #f2f2f2; padding: 2px; font-size: 8px;">Weight</td>
+                            <td style="font-weight: bold; background: #f2f2f2; padding: 2px; font-size: 10px;">Weight</td>
                             <td style="padding: 2px;"></td>
                             <td style="padding: 2px;"></td>
                             <td style="padding: 2px;"></td>
@@ -360,30 +386,40 @@
                     </tr>
                 </tbody>
             </table>
+            <div class="signature-row" style="margin-top: 5px; margin-bottom: 5px;">
+                <div class="signature-box"><span class="label">Shift In-Charge</span><div class="line">Sig & Date</div></div>
+                <div class="signature-box"><span class="label">Line Clearance</span><div class="line">Sig & Date</div></div>
+                <div class="signature-box"><span class="label">Machine Supervisor</span><div class="line">Sig & Date</div></div>
+                <div class="signature-box"><span class="label">QC Personnel</span><div class="line">Sig & Date</div></div>
+            </div>
+
         @else
             <!-- Single piece: Show one table -->
             <table class="data-table" style="margin-top: 10px; table-layout: fixed; width: 100%;">
                 <thead>
                     <tr>
-                        <th colspan="11" style="background: #333; color: #fff; text-align: center; padding: 6px; font-size: 12px;">CORRUGATION PLANT</th>
+                        <th colspan="8" style="padding: 2px; border: none; background: transparent;">
+                            <div class="premium-heading">2. CORRUGATION PLANT</div>
+                        </th>
                     </tr>
                     <tr>
-                        <th style="background: #000; color: #fff; width: 9.09%;">Glue</th>
-                        <th style="background: #fff; width: 9.09%;">Starch</th>
-                        <th style="background: #000; color: #fff; width: 9.09%;" colspan="2">Job Start Time</th>
-                        <th style="background: #fff; width: 9.09%;"></th>
-                        <th style="background: #000; color: #fff; width: 9.09%;" colspan="2">Job End Time</th>
-                        <th style="background: #fff; width: 9.09%;"></th>
-                        <th style="background: #000; color: #fff; width: 9.09%;" colspan="2">Sheet Produced</th>
-                        <th style="background: #fff; width: 9.09%;"></th>
+                        <th style="background: #000; color: #fff; width: 12.5%;">Glue</th>
+                        <th style="background: #fff; width: 12.5%;">Starch</th>
+                        <th style="background: #000; color: #fff; width: 12.5%; white-space: nowrap;" colspan="2">Job Start Time</th>
+                        <th style="background: #fff; width: 12.5%;"></th>
+                        <th style="background: #000; color: #fff; width: 12.5%; white-space: nowrap;" colspan="2">Job End Time</th>
+                        <th style="background: #fff; width: 12.5%;"></th>
                     </tr>
                 </thead>
                 <tbody>
+                <tr style="height: 12px;">
+                    <td style="font-weight: bold; background: #000; color: #fff; padding: 1px 2px; font-size: 10px; text-align: center;" colspan="2">Sheet Produced</td>
+                    <td style="padding: 1px 2px;" colspan="2"></td>
+                    <td style="font-weight: bold; background: #000; color: #fff; padding: 1px 2px; font-size: 10px; text-align: center;" colspan="2">Sheet Wastage</td>
+                    <td style="padding: 1px 2px;" colspan="2"></td>
+                </tr>
                 <tr style="height: 16px;">
-                    <td style="font-weight: bold; background: #f2f2f2; padding: 2px; font-size: 8px;">Reel #</td>
-                    <td style="padding: 2px;"></td>
-                    <td style="padding: 2px;"></td>
-                    <td style="padding: 2px;"></td>
+                    <td style="font-weight: bold; background: #f2f2f2; padding: 2px; font-size: 10px;">Reel #</td>
                     <td style="padding: 2px;"></td>
                     <td style="padding: 2px;"></td>
                     <td style="padding: 2px;"></td>
@@ -393,36 +429,7 @@
                     <td style="padding: 2px;"></td>
                 </tr>
                 <tr style="height: 16px;">
-                    <td style="font-weight: bold; background: #f2f2f2; padding: 2px; font-size: 8px;">Size</td>
-                    <td style="padding: 2px;"></td>
-                    <td style="padding: 2px;"></td>
-                    <td style="padding: 2px;"></td>
-                    <td style="padding: 2px;"></td>
-                    <td style="padding: 2px;"></td>
-                    <td style="padding: 2px;"></td>
-                    <td style="padding: 2px;"></td>
-                    <td style="padding: 2px;"></td>
-                    <td style="padding: 2px;"></td>
-                    <td style="padding: 2px;"></td>
-                </tr>
-                <tr style="height: 16px;">
-                    <td style="font-weight: bold; background: #f2f2f2; padding: 2px; font-size: 8px; border-bottom: 3px double #000;">Weight</td>
-                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
-                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
-                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
-                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
-                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
-                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
-                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
-                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
-                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
-                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
-                </tr>
-                <tr style="height: 16px;">
-                    <td style="font-weight: bold; background: #f2f2f2; padding: 2px; font-size: 8px;">Reel #</td>
-                    <td style="padding: 2px;"></td>
-                    <td style="padding: 2px;"></td>
-                    <td style="padding: 2px;"></td>
+                    <td style="font-weight: bold; background: #f2f2f2; padding: 2px; font-size: 10px;">Size</td>
                     <td style="padding: 2px;"></td>
                     <td style="padding: 2px;"></td>
                     <td style="padding: 2px;"></td>
@@ -432,10 +439,17 @@
                     <td style="padding: 2px;"></td>
                 </tr>
                 <tr style="height: 16px;">
-                    <td style="font-weight: bold; background: #f2f2f2; padding: 2px; font-size: 8px;">Size</td>
-                    <td style="padding: 2px;"></td>
-                    <td style="padding: 2px;"></td>
-                    <td style="padding: 2px;"></td>
+                    <td style="font-weight: bold; background: #f2f2f2; padding: 2px; font-size: 10px; border-bottom: 3px double #000;">Weight</td>
+                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
+                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
+                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
+                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
+                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
+                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
+                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
+                </tr>
+                <tr style="height: 16px;">
+                    <td style="font-weight: bold; background: #f2f2f2; padding: 2px; font-size: 10px;">Reel #</td>
                     <td style="padding: 2px;"></td>
                     <td style="padding: 2px;"></td>
                     <td style="padding: 2px;"></td>
@@ -445,10 +459,17 @@
                     <td style="padding: 2px;"></td>
                 </tr>
                 <tr style="height: 16px;">
-                    <td style="font-weight: bold; background: #f2f2f2; padding: 2px; font-size: 8px; border-bottom: 3px double #000;">Weight</td>
-                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
-                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
-                    <td style="padding: 2px; border-bottom: 3px double #000;"></td>
+                    <td style="font-weight: bold; background: #f2f2f2; padding: 2px; font-size: 10px;">Size</td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                    <td style="padding: 2px;"></td>
+                </tr>
+                <tr style="height: 16px;">
+                    <td style="font-weight: bold; background: #f2f2f2; padding: 2px; font-size: 10px; border-bottom: 3px double #000;">Weight</td>
                     <td style="padding: 2px; border-bottom: 3px double #000;"></td>
                     <td style="padding: 2px; border-bottom: 3px double #000;"></td>
                     <td style="padding: 2px; border-bottom: 3px double #000;"></td>
@@ -459,19 +480,20 @@
                 </tr>
             </tbody>
             </table>
+            <div class="signature-row" style="margin-top: 5px; margin-bottom: 5px;">
+                <div class="signature-box"><span class="label">Shift In-Charge</span><div class="line">Sig & Date</div></div>
+                <div class="signature-box"><span class="label">Line Clearance</span><div class="line">Sig & Date</div></div>
+                <div class="signature-box"><span class="label">Machine Supervisor</span><div class="line">Sig & Date</div></div>
+                <div class="signature-box"><span class="label">QC Personnel</span><div class="line">Sig & Date</div></div>
+            </div>
         @endif
-
-        <div class="signature-row" style="margin-top: 5px; margin-bottom: 5px;">
-            <div class="signature-box"><span class="label">Shift In-Charge</span><div class="line">Sig & Date</div></div>
-            <div class="signature-box"><span class="label">Line Clearance</span><div class="line">Sig & Date</div></div>
-            <div class="signature-box"><span class="label">Machine Supervisor</span><div class="line">Sig & Date</div></div>
-            <div class="signature-box"><span class="label">QC Personnel</span><div class="line">Sig & Date</div></div>
-        </div>
 
         <table class="data-table">
             <thead>
                 <tr>
-                    <th colspan="8" style="background: #333; color: #fff; text-align: center; padding: 6px; font-size: 12px;">3rd PROCESS MANUFACTURING FOR CORRUGATED CARTONS</th>
+                    <th colspan="8" style="padding: 2px; border: none; background: transparent;">
+                        <div class="premium-heading">3. 3rd PROCESS MANUFACTURING FOR CORRUGATED CARTONS</div>
+                    </th>
                 </tr>
                 <tr>
                     <td colspan="8" style="padding: 4px; font-size: 10px;">
@@ -482,27 +504,27 @@
                     </td>
                 </tr>
                 <tr>
-                    <th style="width: 40px;">S. No.</th>
-                    <th style="width: 10%;">Cartons Size</th>
-                    <th style="width: 10%;">Printing</th>
-                    <th style="width: 10%;">Color Shade</th>
-                    <th style="width: 10%;">Quantity of Box</th>
-                    <th style="width: 8%;">Waste</th>
-                    <th style="width: 10%;">Final Quantity</th>
-                    <th style="width: 32%;">Remarks</th>
+                    <th style="width: 40px; font-size: 11px;">S. No.</th>
+                    <th style="width: 10%; font-size: 11px;">Cartons Size</th>
+                    <th style="width: 10%; font-size: 11px;">Printing</th>
+                    <th style="width: 10%; font-size: 11px;">Color Shade</th>
+                    <th style="width: 10%; font-size: 11px;">Quantity of Box</th>
+                    <th style="width: 8%; font-size: 11px;">Waste</th>
+                    <th style="width: 10%; font-size: 11px;">Final Quantity</th>
+                    <th style="width: 32%; font-size: 11px;">Remarks</th>
                 </tr>
             </thead>
             <tbody>
                 @for($i = 1; $i <= 2; $i++)
-                <tr style="height: 18px;">
-                    <td class="text-center" style="padding: 2px;">{{ $i }}</td>
-                    <td style="padding: 2px;"></td>
-                    <td style="padding: 2px;"></td>
-                    <td style="padding: 2px;"></td>
-                    <td style="padding: 2px;"></td>
-                    <td style="padding: 2px;"></td>
-                    <td style="padding: 2px;"></td>
-                    <td style="padding: 2px;"></td>
+                <tr style="height: 22px;">
+                    <td class="text-center" style="padding: 4px; font-size: 11px;">{{ $i }}</td>
+                    <td style="padding: 4px;"></td>
+                    <td style="padding: 4px;"></td>
+                    <td style="padding: 4px;"></td>
+                    <td style="padding: 4px;"></td>
+                    <td style="padding: 4px;"></td>
+                    <td style="padding: 4px;"></td>
+                    <td style="padding: 4px;"></td>
                 </tr>
                 @endfor
             </tbody>
@@ -518,26 +540,28 @@
         <table class="data-table" style="table-layout: fixed; width: 100%;">
             <thead>
                 <tr>
-                    <th colspan="12" style="background: #333; color: #fff; text-align: center; padding: 6px; font-size: 12px;">FINISHED GOODS DISPATCH</th>
+                    <th colspan="12" style="padding: 2px; border: none; background: transparent;">
+                        <div class="premium-heading">4. FINISHED GOODS DISPATCH</div>
+                    </th>
                 </tr>
                 <tr>
                     <th style="width: 3%;">S. No.</th>
-                    <th style="width: 13.67%;">Date</th>
-                    <th style="width: 11.67%;">Qty. In</th>
-                    <th style="width: 11.67%;">DC. No.</th>
-                    <th style="width: 11.67%;">Qty. Out</th>
+                    <th style="width: 15.67%;">Date</th>
+                    <th style="width: 10.67%;">Qty. In</th>
+                    <th style="width: 10.67%;">DC. No.</th>
+                    <th style="width: 10.67%;">Qty. Out</th>
                     <th style="width: 11.67%; border-right: 2px solid #000;">Qty Balance</th>
                     <th style="width: 3%;">S. No.</th>
-                    <th style="width: 13.67%;">Date</th>
-                    <th style="width: 11.67%;">Qty. In</th>
-                    <th style="width: 11.67%;">DC. No.</th>
-                    <th style="width: 11.67%;">Qty. Out</th>
+                    <th style="width: 15.67%;">Date</th>
+                    <th style="width: 10.67%;">Qty. In</th>
+                    <th style="width: 10.67%;">DC. No.</th>
+                    <th style="width: 10.67%;">Qty. Out</th>
                     <th style="width: 11.67%;">Qty Balance</th>
                 </tr>
             </thead>
             <tbody>
                 @php
-                    $rowCount = $issue->jobCard->pieces_count > 1 ? 6 : 9;
+                    $rowCount = $issue->jobCard->pieces_count > 1 ? 5 : 8;
                 @endphp
                 @for($i = 1; $i <= $rowCount; $i++)
                 <tr style="height: 18px;">
@@ -565,7 +589,7 @@
             </tr>
         </table>
 
-        <div style="text-align: center; margin-top: 40px; margin-bottom: 3px;">
+        <div style="text-align: center; margin-top: 20px; margin-bottom: 3px;">
             <div style="display: inline-block;">
                 <span style="font-weight: bold; color: #000;">Dispatcher</span>
                 <span style="border-bottom: 1px solid #000; display: inline-block; width: 200px; margin-left: 10px; padding-bottom: 2px; color: #999;">Sig & Date</span>

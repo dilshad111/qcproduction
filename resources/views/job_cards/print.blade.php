@@ -9,23 +9,24 @@
     <style>
         @page {
             size: A4 portrait;
-            margin: 8mm 8mm 8mm 8mm;
+            margin: 3mm 5mm 3mm 10mm; /* top right bottom left */
         }
         body {
-            font-family: Arial, sans-serif;
-            font-size: 9px;
+            font-family: 'Segoe UI', 'Calibri', 'Arial', sans-serif;
+            font-size: 10pt;
             color: #000000;
             background: #fff;
             width: auto;
             max-width: 100%;
             margin: 0;
             padding: 0;
+            line-height: 1.3;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
         }
         .print-container {
-            border: 2px solid #000;
-            padding: 2px;
+            border: 2.5px solid #000;
+            padding: 4px;
             height: auto;
             display: flex;
             flex-direction: column;
@@ -39,18 +40,19 @@
             margin-bottom: 2px;
         }
         .logo-section {
-            padding: 3px;
+            padding: 5px;
             border-right: 1px solid #000;
             display: flex;
             align-items: center;
             justify-content: center;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
         }
         .logo-section img {
             max-width: 80px;
             max-height: 30px;
         }
         .title-section {
-            padding: 3px;
+            padding: 5px;
             text-align: center;
             border-right: 1px solid #000;
             display: flex;
@@ -59,37 +61,44 @@
         }
         .title-section h1 {
             margin: 0;
-            font-size: 11px;
+            font-size: 18pt;
             font-weight: bold;
-            text-transform: uppercase;
+            color: #0000CD;
+            letter-spacing: 0.5px;
         }
         .meta-section {
-            padding: 1px;
-            font-size: 8px;
+            padding: 3px;
+            font-size: 8pt;
         }
         .meta-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 1px;
+            margin-bottom: 2px;
         }
         .section-box {
-            border: 1px solid #000;
-            margin-bottom: 2px;
+            border: 1.5px solid #000;
+            margin-bottom: 1.5px;
             page-break-inside: avoid;
         }
         .section-title {
-            background: #eee;
+            background: linear-gradient(to bottom, #4d4d4d 0%, #000000 100%);
+            color: #fff !important;
             font-weight: bold;
-            padding: 2px 4px;
-            border-bottom: 2px solid #000;
-            text-align: center;
+            padding: 3px 12px;
+            border-radius: 4px;
+            text-align: left;
             text-transform: uppercase;
-            font-size: 10px;
+            font-size: 10.5pt;
+            letter-spacing: 0.5px;
+            margin: 1px;
+            display: block;
+            border: 1px solid #000;
+            -webkit-print-color-adjust: exact;
         }
         .info-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            padding: 1px;
+            padding: 1px 3px;
         }
         .info-item {
             margin-bottom: 1px;
@@ -97,33 +106,40 @@
         }
         .info-label {
             font-weight: bold;
-            width: 80px;
-            font-size: 9px;
+            width: 90px;
+            font-size: 9pt;
+            background: #f9f9f9;
+            padding: 2px 4px;
         }
         .info-value {
             flex: 1;
             border-bottom: 1px dotted #999;
-            font-size: 9px;
+            font-size: 9pt;
+            padding: 2px 4px;
         }
         .table-custom {
             width: 100%;
             border-collapse: collapse;
-            font-size: 8px;
+            font-size: 9pt;
         }
         .table-custom th, .table-custom td {
             border: 1px solid #000;
-            padding: 2px;
+            padding: 4px 6px;
             text-align: center;
+        }
+        .table-custom th {
+            background: linear-gradient(135deg, #e8e8e8 0%, #d0d0d0 100%);
+            font-weight: bold;
         }
         .technical-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 2px;
+            gap: 3px;
         }
         .footer-sig {
             margin-top: 2px;
-            border-top: 1px solid #000;
-            padding: 1px 30px 2px 30px;
+            border-top: 1.5px solid #000;
+            padding: 2px 30px 2px 30px;
             display: flex;
             justify-content: space-between;
             page-break-inside: avoid;
@@ -131,24 +147,25 @@
         }
         .sig-box {
             text-align: center;
-            border-top: 1px solid #000;
-            width: 80px;
-            padding-top: 1px;
-            margin-top: 15px;
-            font-size: 9px;
+            border-top: 1.5px solid #000;
+            width: 90px;
+            padding-top: 3px;
+            margin-top: 25px;
+            font-size: 9pt;
+            font-weight: 600;
         }
-        /* Ply-based tolerance logic visual helper */
         .tolerance-info {
-            font-size: 8px;
+            font-size: 8pt;
             font-style: italic;
+            font-weight: bold;
+            color: #c00;
         }
-        /* Compact helpers */
-        .mb-1 { margin-bottom: 1px !important; }
-        .mb-2 { margin-bottom: 2px !important; }
-        .mt-1 { margin-top: 1px !important; }
-        .mt-2 { margin-top: 2px !important; }
-        .p-1 { padding: 2px !important; }
-        .p-2 { padding: 3px !important; }
+        .mb-1 { margin-bottom: 2px !important; }
+        .mb-2 { margin-bottom: 3px !important; }
+        .mt-1 { margin-top: 2px !important; }
+        .mt-2 { margin-top: 3px !important; }
+        .p-1 { padding: 4px !important; }
+        .p-2 { padding: 5px !important; }
     </style>
 </head>
 <body onload="window.print()">
@@ -216,36 +233,36 @@
 
         <!-- Customer & Item Info -->
         <div class="section-box">
-            <div class="section-title">Job Information</div>
-            <div style="display: flex; padding: 3px; gap: 6px; align-items: center;">
+            <div class="section-title">1. Job Information</div>
+            <div style="display: flex; padding: 5px; gap: 8px; align-items: center;">
                 <!-- Left: Customer and Item Info (Centered) -->
                 <div style="flex: 1; text-align: center;">
                     <!-- Row 1: Customer Name -->
-                    <div style="margin-bottom: 4px;">
-                        <span style="font-weight: bold; font-size: 12px;">{{ $jobCard->customer->name ?? '' }}</span>
+                    <div style="margin-bottom: 5px;">
+                        <span style="font-weight: bold; font-size: 14pt; background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%); padding: 3px 10px; border-radius: 3px;">{{ $jobCard->customer->name ?? '' }}</span>
                     </div>
                     
                     <!-- Row 2: Item Name and Item Code -->
-                    <div style="font-size: 10px; margin-bottom: 3px;">
-                        <span style="font-weight: 600;">Item Name:</span>
-                        <span>{{ $jobCard->item_name }}</span>
-                        <span style="margin-left: 15px; font-weight: 600;">Item Code:</span>
-                        <span>{{ $jobCard->item_code }}</span>
+                    <div style="font-size: 11pt; margin-bottom: 4px;">
+                        <span style="font-weight: bold;">Item Name:</span>
+                        <span style="font-weight: 600;">{{ $jobCard->item_name }}</span>
+                        <span style="margin-left: 20px; font-weight: bold;">Item Code:</span>
+                        <span style="font-weight: 600;">{{ $jobCard->item_code }}</span>
                     </div>
                     
                     <!-- Row 3: Item Size with Tolerance -->
                     @php
                         $tolerance = ($jobCard->ply_type == 5) ? 5 : 3;
                     @endphp
-                    <div style="font-size: 10px;">
-                        <span style="font-weight: 600;">Size:</span>
+                    <div style="font-size: 11pt;">
+                        <span style="font-weight: bold;">Size:</span>
                         <span style="font-weight: bold;">
                             {{ ($jobCard->uom == 'mm' ? number_format($jobCard->length, 0) : number_format($jobCard->length, 2)) }} x 
                             {{ ($jobCard->uom == 'mm' ? number_format($jobCard->width, 0) : number_format($jobCard->width, 2)) }} x 
                             {{ ($jobCard->uom == 'mm' ? number_format($jobCard->height, 0) : number_format($jobCard->height, 2)) }} 
                             {{ $jobCard->uom }}
                         </span>
-                        <span style="margin-left: 10px; font-style: italic; color: #d9534f; font-weight: 600; font-size: 9px;">
+                        <span style="margin-left: 10px; font-style: italic; color: #d9534f; font-weight: bold; font-size: 10pt;">
                             (Tolerance: ±{{ $tolerance }} mm)
                         </span>
                     </div>
@@ -291,45 +308,45 @@
             </div>
         </div>
 
-        <!-- Technical Instructions Grid - Always Stacked for A4 Fit consistency -->
+        <!-- Technical Instructions Grid - Stacked vertically as requested -->
         <div class="technical-grid" style="display: block;">
             <!-- Left Column: Corrugation -->
             <div class="section-box">
-                <div class="section-title">Instruction for Corrugation Plant</div>
-                <div class="p-1">
+                <div class="section-title">2. Corrugation</div>
+                <div class="p-0">
                     @if($jobCard->pieces_count > 1 && $jobCard->pieces->count() > 0)
                         <!-- Multi-Piece Layout - 2 Column Piece Grid -->
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px;">
                             @foreach($jobCard->pieces as $piece)
-                                <div style="border: 1px solid #000; padding: 6px;">
-                                    <div style="background: #e0e0e0; padding: 1px; margin-bottom: 2px; font-weight: bold; text-align: center; font-size: 9px;">
+                                <div style="border: 1.5px solid #000; padding: 4px; background: #fafafa;">
+                                    <div style="background: linear-gradient(135deg, #e0e0e0 0%, #d0d0d0 100%); padding: 2px; margin-bottom: 2px; font-weight: bold; text-align: center; font-size: 10pt;">
                                         {{ $piece->piece_name ?: 'Piece ' . $piece->piece_number }}
                                     </div>
                                     
                                     <!-- Size and Ply Header -->
-                                    <div style="text-align: center; margin-bottom: 2px; font-size: 8px;">
+                                    <div style="text-align: center; margin-bottom: 3px; font-size: 10pt;">
                                         <strong>Size:</strong> {{ (int)$piece->length }} x {{ (int)$piece->width }} x {{ (int)$piece->height }} mm &nbsp; <strong>Ply:</strong> {{ $piece->ply_type }}-Ply
                                     </div>
                                     
                                     <!-- Table for Deckle, Sheet Length, UPS -->
-                                    <table style="width: 100%; border-collapse: collapse; font-size: 8px; margin-bottom: 2px; border: 1px solid #000;">
+                                    <table style="width: 100%; border-collapse: collapse; font-size: 9pt; margin-bottom: 3px; border: 1.5px solid #000;">
                                         <thead>
-                                            <tr style="background: #ddd;">
-                                                <th style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 1px; text-align: center; font-weight: bold;" rowspan="2">Deckle<br>Size</th>
-                                                <th style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 1px; text-align: center; font-weight: bold;" colspan="2">Sheet Length</th>
-                                                <th style="border-bottom: 1px solid #000; padding: 1px; text-align: center; font-weight: bold;" rowspan="2">UPS</th>
+                                            <tr style="background: linear-gradient(135deg, #e8e8e8 0%, #d0d0d0 100%);">
+                                                <th style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 3px; text-align: center; font-weight: bold;" rowspan="2">Deckle<br>Size</th>
+                                                <th style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 3px; text-align: center; font-weight: bold;" colspan="2">Sheet Length</th>
+                                                <th style="border-bottom: 1px solid #000; padding: 3px; text-align: center; font-weight: bold;" rowspan="2">UPS</th>
                                             </tr>
-                                            <tr style="background: #ddd;">
-                                                <th style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 1px; text-align: center; font-weight: bold;">In Inches</th>
-                                                <th style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 1px; text-align: center; font-weight: bold;">In MM</th>
+                                            <tr style="background: linear-gradient(135deg, #e8e8e8 0%, #d0d0d0 100%);">
+                                                <th style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 3px; text-align: center; font-weight: bold;">In Inches</th>
+                                                <th style="border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 3px; text-align: center; font-weight: bold;">In MM</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td style="border-right: 1px solid #000; padding: 1px; text-align: center; font-weight: bold;">{{ number_format($piece->deckle_size, 0) }}"</td>
-                                                <td style="border-right: 1px solid #000; padding: 1px; text-align: center; font-weight: bold;">{{ number_format($piece->sheet_length, 2) }}"</td>
-                                                <td style="border-right: 1px solid #000; padding: 1px; text-align: center; font-weight: bold;">{{ number_format($piece->sheet_length * 25.4, 0) }} mm</td>
-                                                <td style="padding: 1px; text-align: center; font-weight: bold;">{{ $piece->ups }}</td>
+                                                <td style="border-right: 1px solid #000; padding: 3px; text-align: center; font-weight: bold;">{{ number_format($piece->deckle_size, 0) }}"</td>
+                                                <td style="border-right: 1px solid #000; padding: 3px; text-align: center; font-weight: bold;">{{ number_format($piece->sheet_length, 2) }}"</td>
+                                                <td style="border-right: 1px solid #000; padding: 3px; text-align: center; font-weight: bold;">{{ number_format($piece->sheet_length * 25.4, 0) }} mm</td>
+                                                <td style="padding: 3px; text-align: center; font-weight: bold;">{{ $piece->ups }}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -352,26 +369,28 @@
 
                                     @if($isRSCPlantPiece && ($piece->ply_type == 3 || $piece->ply_type == 5))
                                         <div style="margin-bottom: 2px;">
-                                            <div style="font-size: 8px; margin-bottom: 1px;"><strong>Slitting:</strong> {{ $piece->slitting_creasing }}</div>
-                                            <table style="width: 100%; border-collapse: collapse; border: 1px solid #000;">
-                                                <thead>
-                                                    <tr style="background: #f0f0f0;">
-                                                        <th style="border: 1px solid #000; padding: 0px 1px; text-align: center; font-size: 10px;">Flap # 1</th>
-                                                        <th style="border: 1px solid #000; padding: 0px 1px; text-align: center; font-size: 10px;">Height</th>
-                                                        <th style="border: 1px solid #000; padding: 0px 1px; text-align: center; font-size: 10px;">Flap # 2</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td style="border: 1px solid #000; padding: 1px; text-align: center; font-weight: bold; font-size: 12px;">{{ number_format($p_flap1, 0) }}</td>
-                                                        <td style="border: 1px solid #000; padding: 1px; text-align: center; font-weight: bold; font-size: 12px;">{{ number_format($p_height, 0) }}</td>
-                                                        <td style="border: 1px solid #000; padding: 1px; text-align: center; font-weight: bold; font-size: 12px;">{{ number_format($p_flap2, 0) }}</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                            <div style="font-size: 9pt; margin-bottom: 2px;"><strong>Slitting:</strong> {{ $piece->slitting_creasing }}</div>
+                                            <div style="text-align: center;">
+                                                <table style="width: 80%; border-collapse: collapse; border: 2px solid #000; margin: 0 auto;">
+                                                    <thead>
+                                                        <tr style="background: linear-gradient(135deg, #e8e8e8 0%, #d0d0d0 100%);">
+                                                            <th style="border: 1px solid #000; padding: 4px; text-align: center; font-size: 10pt; font-weight: bold;">Flap # 1</th>
+                                                            <th style="border: 1px solid #000; padding: 4px; text-align: center; font-size: 10pt; font-weight: bold;">Height</th>
+                                                            <th style="border: 1px solid #000; padding: 4px; text-align: center; font-size: 10pt; font-weight: bold;">Flap # 2</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="border: 1px solid #000; padding: 5px; text-align: center; font-weight: bold; font-size: 11pt;">{{ number_format($p_flap1, 0) }}</td>
+                                                            <td style="border: 1px solid #000; padding: 5px; text-align: center; font-weight: bold; font-size: 11pt;">{{ number_format($p_height, 0) }}</td>
+                                                            <td style="border: 1px solid #000; padding: 5px; text-align: center; font-weight: bold; font-size: 11pt;">{{ number_format($p_flap2, 0) }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     @else
-                                        <div style="font-size: 8px; margin-bottom: 2px;">
+                                        <div style="font-size: 9pt; margin-bottom: 2px;">
                                             <strong>Slitting:</strong> {{ $piece->slitting_creasing ?? 'N/A' }} 
                                             @if(($piece->slitting_creasing ?? '') != 'None')
                                                 &nbsp;&nbsp;
@@ -382,25 +401,25 @@
 
                                     @if($piece->layers->count() > 0)
                                         <div class="mt-1">
-                                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1px;">
-                                                <strong style="font-size: 8px;">Paper Structure:</strong>
+                                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                                                <strong style="font-size: 10pt;">Paper Structure:</strong>
                                             </div>
-                                            <table style="width: 100%; border-collapse: collapse; margin-top: 1px; font-size: 7px;">
+                                            <table style="width: 100%; border-collapse: collapse; margin-top: 2px; font-size: 9pt;">
                                                 <thead>
-                                                    <tr style="background: #f5f5f5;">
-                                                        <th style="border: 1px solid #999; padding: 1px; font-weight: bold; text-align: center;">L</th>
-                                                        <th style="border: 1px solid #999; padding: 1px; font-weight: bold; text-align: center;">Paper</th>
-                                                        <th style="border: 1px solid #999; padding: 1px; font-weight: bold; text-align: center;">GSM</th>
-                                                        <th style="border: 1px solid #999; padding: 1px; font-weight: bold; text-align: center;">F</th>
+                                                    <tr style="background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);">
+                                                        <th style="border: 1px solid #999; padding: 3px; font-weight: bold; text-align: center;">Layer</th>
+                                                        <th style="border: 1px solid #999; padding: 3px; font-weight: bold; text-align: center;">Paper</th>
+                                                        <th style="border: 1px solid #999; padding: 3px; font-weight: bold; text-align: center;">GSM</th>
+                                                        <th style="border: 1px solid #999; padding: 3px; font-weight: bold; text-align: center;">Flute</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     @foreach($piece->layers as $layer)
                                                     <tr>
-                                                        <td style="border: 1px solid #999; padding: 1px; text-align: center;">{{ $layer->type }}</td>
-                                                        <td style="border: 1px solid #999; padding: 1px;">{{ $layer->paper_name }}</td>
-                                                        <td style="border: 1px solid #999; padding: 1px; text-align: center;">{{ $layer->gsm }}</td>
-                                                        <td style="border: 1px solid #999; padding: 1px; text-align: center;">{{ $layer->flute_type ?? '-' }}</td>
+                                                        <td style="border: 1px solid #999; padding: 3px; text-align: left; font-weight: bold;">{{ $layer->type }}</td>
+                                                        <td style="border: 1px solid #999; padding: 3px; text-align: left;">{{ $layer->paper_name }}</td>
+                                                        <td style="border: 1px solid #999; padding: 3px; text-align: center;">{{ $layer->gsm }}</td>
+                                                        <td style="border: 1px solid #999; padding: 3px; text-align: center;">{{ $layer->flute_type ?? '-' }}</td>
                                                     </tr>
                                                     @endforeach
                                                 </tbody>
@@ -409,9 +428,9 @@
                                     @endif
 
                                     @if(!empty($piece->corrugation_instruction))
-                                    <div style="margin-top: 2px; padding: 2px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 2px;">
-                                        <strong style="color: #856404; font-size: 8px;">⚠ Plant Instr:</strong>
-                                        <div style="margin-top: 1px; font-size: 7px; color: #000; font-weight: bold; background: #fff; padding: 2px; border: 1px dashed #ffc107;">{{ $piece->corrugation_instruction }}</div>
+                                    <div style="margin-top: 3px; padding: 3px; background: linear-gradient(135deg, #fffacd 0%, #fff9c4 100%); border: 1.5px solid #d4a017; border-radius: 2px;">
+                                        <strong style="color: #856404; font-size: 9pt;">⚠ Plant Instruction:</strong>
+                                        <div style="margin-top: 2px; font-size: 8pt; color: #000; font-weight: bold; background: #fff; padding: 3px; border: 1px dashed #ffc107;">{{ $piece->corrugation_instruction }}</div>
                                     </div>
                                     @endif
                                 </div>
@@ -419,19 +438,17 @@
                         </div>
                     @else
                         <!-- Single Piece Layout - Standard Compact -->
-                        <div class="info-item">
-                            <span class="info-label" style="font-size: 10px;">Size (Inner):</span>
-                            <span class="info-value" style="font-size: 11px;">
+                        <div style="font-size: 11pt; margin-bottom: 4px; text-align: center;">
+                            <span style="font-weight: bold;">Size (Inner):</span>
+                            <span style="font-weight: bold;">
                                 {{ ($jobCard->uom == 'mm' ? number_format($jobCard->length, 0) : number_format($jobCard->length, 2)) }} x 
                                 {{ ($jobCard->uom == 'mm' ? number_format($jobCard->width, 0) : number_format($jobCard->width, 2)) }} x 
                                 {{ ($jobCard->uom == 'mm' ? number_format($jobCard->height, 0) : number_format($jobCard->height, 2)) }} 
                                 {{ $jobCard->uom }}
-                                <span class="tolerance-info" style="font-size: 9px;">(Tol: {{ $jobCard->ply_type == 5 ? '+/- 5' : '+/- 3' }} mm)</span>
                             </span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label" style="font-size: 10px;">Ply Type:</span>
-                            <span class="info-value" style="font-size: 11px;">{{ $jobCard->ply_type }}-Ply</span>
+                            <span class="tolerance-info" style="font-size: 10pt; margin-left: 8px;">(Tol: {{ $jobCard->ply_type == 5 ? '+/- 5' : '+/- 3' }} mm)</span>
+                            <span style="margin-left: 20px; font-weight: bold;">Ply Type:</span>
+                            <span style="font-weight: bold;">{{ $jobCard->ply_type }}-Ply</span>
                         </div>
 
                         <!-- Technical Details Table -->
@@ -469,22 +486,24 @@
                         @endphp
 
                         @if($isRSCPlant && ($jobCard->ply_type == 3 || $jobCard->ply_type == 5))
-                            <table style="width: 100%; border-collapse: collapse; margin-top: 4px; border: 1px solid #000;">
-                                <thead>
-                                    <tr style="background: #f0f0f0; font-size: 9px;">
-                                        <th style="border: 1px solid #000; padding: 1px;">Flap # 1</th>
-                                        <th style="border: 1px solid #000; padding: 1px;">Height</th>
-                                        <th style="border: 1px solid #000; padding: 1px;">Flap # 2</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr style="font-weight: bold; font-size: 11px; text-align: center;">
-                                        <td style="border: 1px solid #000; padding: 2px;">{{ number_format($s_flap1, 0) }}</td>
-                                        <td style="border: 1px solid #000; padding: 2px;">{{ number_format($s_height, 0) }}</td>
-                                        <td style="border: 1px solid #000; padding: 2px;">{{ number_format($s_flap2, 0) }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div style="text-align: center; margin-top: 6px;">
+                                <table style="width: 80%; border-collapse: collapse; border: 2px solid #000; margin: 0 auto;">
+                                    <thead>
+                                        <tr style="background: linear-gradient(135deg, #e8e8e8 0%, #d0d0d0 100%);">
+                                            <th style="border: 1px solid #000; padding: 4px; text-align: center; font-size: 10pt; font-weight: bold;">Flap # 1</th>
+                                            <th style="border: 1px solid #000; padding: 4px; text-align: center; font-size: 10pt; font-weight: bold;">Height</th>
+                                            <th style="border: 1px solid #000; padding: 4px; text-align: center; font-size: 10pt; font-weight: bold;">Flap # 2</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="border: 1px solid #000; padding: 5px; text-align: center; font-weight: bold; font-size: 11pt;">{{ number_format($s_flap1, 0) }}</td>
+                                            <td style="border: 1px solid #000; padding: 5px; text-align: center; font-weight: bold; font-size: 11pt;">{{ number_format($s_height, 0) }}</td>
+                                            <td style="border: 1px solid #000; padding: 5px; text-align: center; font-weight: bold; font-size: 11pt;">{{ number_format($s_flap2, 0) }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         @else
                             <div class="info-item">
                                 <span class="info-label">Score Lines:</span>
@@ -495,20 +514,20 @@
 
                         <!-- Paper Structure Table -->
                         <div style="margin-top: 8px;">
-                            <strong style="font-size: 11px;">Paper Structure:</strong>
+                            <strong style="font-size: 10pt;">Paper Structure:</strong>
                             <table class="table-custom mt-1">
                                 <thead>
                                     <tr style="background: #f5f5f5;">
-                                        <th>L</th>
+                                        <th>Layer</th>
                                         <th>Paper</th>
                                         <th>GSM</th>
-                                        <th>F</th>
+                                        <th>Flute</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($jobCard->layers as $layer)
                                     <tr>
-                                        <td>{{ $layer->type }}</td>
+                                        <td style="text-align: left; padding-left: 5px; font-weight: bold;">{{ $layer->type }}</td>
                                         <td style="text-align: left; padding-left: 5px;">{{ $layer->paper_name }}</td>
                                         <td>{{ $layer->gsm }}</td>
                                         <td>{{ $layer->flute_type ?? '-' }}</td>
@@ -519,9 +538,9 @@
                         </div>
                         
                         @if(!empty($jobCard->corrugation_instruction))
-                        <div style="margin-top: 2px; padding: 2px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 2px;">
-                            <strong style="color: #856404; font-size: 8px;">⚠ Plant Instr:</strong>
-                            <div style="margin-top: 1px; font-size: 7px; color: #000; font-weight: bold; background: #fff; padding: 2px; border: 1px dashed #ffc107;">{{ $jobCard->corrugation_instruction }}</div>
+                        <div style="margin-top: 3px; padding: 3px; background: linear-gradient(135deg, #fffacd 0%, #fff9c4 100%); border: 1.5px solid #d4a017; border-radius: 2px;">
+                            <strong style="color: #856404; font-size: 9pt;">⚠ Plant Instruction:</strong>
+                            <div style="margin-top: 2px; font-size: 8pt; color: #000; font-weight: bold; background: #fff; padding: 3px; border: 1px dashed #ffc107;">{{ $jobCard->corrugation_instruction }}</div>
                         </div>
                         @endif
                     @endif
@@ -532,11 +551,11 @@
 
             <!-- Right Column: Printing & Converting -->
             <div class="section-box">
-                <div class="section-title">Printing & Finishing Instruction</div>
-                <div class="p-1">
+                <div class="section-title">3. Printing & Finishing</div>
+                <div class="p-0">
                     @if($jobCard->pieces_count > 1 && $jobCard->pieces->count() > 0)
                         <!-- Multi-Piece Printing Layout -->
-                        <div style="display: flex; gap: 10px; margin-bottom: 1px; font-size: 8px; justify-content: center;">
+                        <div style="display: flex; gap: 10px; margin-bottom: 2px; font-size: 10pt; justify-content: center;">
                             <div>
                                 <span style="font-weight: bold;">Process:</span>
                                 <span>{{ $jobCard->process_type }}</span>
@@ -549,13 +568,13 @@
 
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-top: 2px;">
                             @foreach($jobCard->pieces as $piece)
-                                <div style="border: 1px solid #999; padding: 3px;">
-                                    <div style="background: #f0f0f0; padding: 1px; margin-bottom: 1px; font-weight: bold; text-align: center; font-size: 8px;">
+                                <div style="border: 1.5px solid #999; padding: 4px; background: #fafafa;">
+                                    <div style="background: linear-gradient(135deg, #e8e8e8 0%, #d0d0d0 100%); padding: 3px; margin-bottom: 2px; font-weight: bold; text-align: center; font-size: 10pt;">
                                         {{ $piece->piece_name ?: 'Piece ' . $piece->piece_number }}
                                     </div>
                                     
-                                    <div style="font-size: 7px; text-align: center;">
-                                        <div style="margin-bottom: 1px;">
+                                    <div style="font-size: 9pt; text-align: center;">
+                                        <div style="margin-bottom: 2px;">
                                             <span style="font-weight: bold;">Printing:</span>
                                             <span>
                                                 @if($piece->print_colors == 0)
@@ -574,22 +593,22 @@
                                                 </span>
                                             @endif
                                         </div>
-                                        <div style="margin-bottom: 1px;">
+                                        <div style="margin-bottom: 2px;">
                                             <span style="font-weight: bold;">Packing:</span>
                                             <span>{{ $piece->packing_bundle_qty ?? 'N/A' }} / bundle {{ $piece->packing_type ? '('.$piece->packing_type.')' : '' }}</span>
                                         </div>
                                     </div>
                                     @if(!empty($piece->printing_instruction))
-                                    <div style="margin-top: 2px; padding: 2px; background: #e7f3ff; border: 1px solid #007bff; border-radius: 2px;">
-                                        <strong style="color: #004085; font-size: 7px;">ℹ Print:</strong>
-                                        <div style="margin-top: 1px; font-size: 6px; color: #000; font-weight: bold; background: #fff; padding: 2px; border: 1px dashed #007bff;">{{ $piece->printing_instruction }}</div>
+                                    <div style="margin-top: 4px; padding: 4px; background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border: 1.5px solid #1976d2; border-radius: 3px;">
+                                        <strong style="color: #004085; font-size: 11pt;">ℹ Print:</strong>
+                                        <div style="margin-top: 3px; font-size: 10pt; color: #000; font-weight: bold; background: #fff; padding: 4px; border: 1px dashed #007bff;">{{ $piece->printing_instruction }}</div>
                                     </div>
                                     @endif
 
                                     @if(!empty($piece->finishing_instruction))
-                                    <div style="margin-top: 1px; padding: 2px; background: #d4edda; border: 1px solid #28a745; border-radius: 2px;">
-                                        <strong style="color: #155724; font-size: 7px;">✂ Finish:</strong>
-                                        <div style="margin-top: 1px; font-size: 6px; color: #000; font-weight: bold; background: #fff; padding: 2px; border: 1px dashed #28a745;">{{ $piece->finishing_instruction }}</div>
+                                    <div style="margin-top: 4px; padding: 4px; background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); border: 1.5px solid #28a745; border-radius: 3px;">
+                                        <strong style="color: #155724; font-size: 11pt;">✂ Finish:</strong>
+                                        <div style="margin-top: 3px; font-size: 10pt; color: #000; font-weight: bold; background: #fff; padding: 4px; border: 1px dashed #28a745;">{{ $piece->finishing_instruction }}</div>
                                     </div>
                                     @endif
                                 </div>
@@ -635,73 +654,70 @@
                             </span>
                         </div>
                     @endif
-
-
-                    <!-- Special Add-ons Block -->
-                    <div class="section-box mt-1">
-                        <div class="section-title">Special Add-ons</div>
-                        <div class="p-1">
-                            <!-- Honeycomb -->
-                             <div class="mb-1" style="font-size: 8px;">
-                                 <span style="font-weight: bold;">Honeycomb:</span>&nbsp;&nbsp;&nbsp;
-                                 @if(!empty($jobCard->special_details['honeycomb']) && !empty($jobCard->special_details['honeycomb']['holes']))
-                                     @php $h = $jobCard->special_details['honeycomb']; @endphp
-                                     {{ ($h['length'] ?? '-') }}x{{ ($h['width'] ?? '-') }}x{{ ($h['height'] ?? '-') }} {{ $h['uom'] ?? '' }}, 
-                                     {{ $h['plies'] ?? '-' }}-Ply, 
-                                     {{ $h['holes'] ?? '-' }} holes,
-                                     @if(!empty($h['material']))
-                                         {{ $h['material'] }},
-                                     @endif
-                                     {{ ucfirst($h['source'] ?? '-') }}
-                                     @if(($h['source'] ?? '') == 'outsource') - {{ $h['supplier_name'] ?? 'N/A' }} @endif
-                                 @else
-                                     <span style="color: #000;">N/A</span>
-                                 @endif
-                             </div>
-                             
-                             <!-- Separator -->
-                             <div style="font-size: 8px;">
-                                 <span style="font-weight: bold;">Separator:</span>&nbsp;&nbsp;&nbsp;
-                                 @if(!empty($jobCard->special_details['separator']) && !empty($jobCard->special_details['separator']['length']))
-                                     @php $s = $jobCard->special_details['separator']; @endphp
-                                     {{ ($s['length'] ?? '-') }}x{{ ($s['width'] ?? '-') }} {{ $s['uom'] ?? '' }}, 
-                                     {{ $s['plies'] ?? '-' }}-Ply, 
-                                     {{ ucfirst($s['source'] ?? '-') }}
-                                     @if(($s['source'] ?? '') == 'outsource') - {{ $s['supplier_name'] ?? 'N/A' }} @endif
-                                 @else
-                                     <span style="color: #000;">N/A</span>
-                                 @endif
-                             </div>
-                        </div>
-                    </div>
-                    
-
-
-                    <!-- Global Instructions (Only for Single Piece) -->
-                    @if($jobCard->pieces_count <= 1)
-                        <!-- Global Printing Instruction -->
-                        @if(!empty($jobCard->printing_instruction))
-                        <div style="margin-top: 2px; padding: 2px; background: #e7f3ff; border: 1px solid #007bff; border-radius: 2px;">
-                            <strong style="color: #004085; font-size: 8px;">ℹ Printing Instr:</strong>
-                            <div style="margin-top: 1px; font-size: 7px; color: #000; font-weight: bold; background: #fff; padding: 2px; border: 1px dashed #007bff;">{{ $jobCard->printing_instruction }}</div>
-                        </div>
-                        @endif
-                        
-                        <!-- Global Finishing Instruction -->
-                        @if(!empty($jobCard->finishing_instruction))
-                        <div style="margin-top: 2px; padding: 2px; background: #d4edda; border: 1px solid #28a745; border-radius: 2px;">
-                            <strong style="color: #155724; font-size: 8px;">✂ Finishing Instr:</strong>
-                            <div style="margin-top: 1px; font-size: 7px; color: #000; font-weight: bold; background: #fff; padding: 2px; border: 1px dashed #28a745;">{{ $jobCard->finishing_instruction }}</div>
-                        </div>
-                        @endif
-                    @endif
                 </div>
             </div>
+
+            <!-- Special Add-ons Block -->
+            <div class="section-box mt-0">
+                <div class="section-title">4. Special Add-ons</div>
+                <div class="p-0">
+                     <!-- Honeycomb -->
+                     <div class="mb-1" style="font-size: 11pt; padding: 4px;">
+                         <span style="font-weight: bold;">Honeycomb:</span>&nbsp;&nbsp;&nbsp;
+                         @if(!empty($jobCard->special_details['honeycomb']) && !empty($jobCard->special_details['honeycomb']['holes']))
+                             @php $h = $jobCard->special_details['honeycomb']; @endphp
+                             {{ ($h['length'] ?? '-') }}x{{ ($h['width'] ?? '-') }}x{{ ($h['height'] ?? '-') }} {{ $h['uom'] ?? '' }}, 
+                             {{ $h['plies'] ?? '-' }}-Ply, 
+                             {{ $h['holes'] ?? '-' }} holes,
+                             @if(!empty($h['material']))
+                                 {{ $h['material'] }},
+                             @endif
+                             {{ ucfirst($h['source'] ?? '-') }}
+                             @if(($h['source'] ?? '') == 'outsource') - {{ $h['supplier_name'] ?? 'N/A' }} @endif
+                         @else
+                             <span style="color: #000;">N/A</span>
+                         @endif
+                     </div>
+                     
+                     <!-- Separator -->
+                     <div style="font-size: 11pt; padding: 4px;">
+                         <span style="font-weight: bold;">Separator:</span>&nbsp;&nbsp;&nbsp;
+                         @if(!empty($jobCard->special_details['separator']) && !empty($jobCard->special_details['separator']['length']))
+                             @php $s = $jobCard->special_details['separator']; @endphp
+                             {{ ($s['length'] ?? '-') }}x{{ ($s['width'] ?? '-') }} {{ $s['uom'] ?? '' }}, 
+                             {{ $s['plies'] ?? '-' }}-Ply, 
+                             {{ ucfirst($s['source'] ?? '-') }}
+                             @if(($s['source'] ?? '') == 'outsource') - {{ $s['supplier_name'] ?? 'N/A' }} @endif
+                         @else
+                             <span style="color: #000;">N/A</span>
+                         @endif
+                     </div>
+                </div>
+            </div>
+
+            <!-- Global Instructions (Only for Single Piece) -->
+            @if($jobCard->pieces_count <= 1)
+                <!-- Global Printing Instruction -->
+                @if(!empty($jobCard->printing_instruction))
+                <div style="margin-top: 5px; padding: 5px; background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border: 1.5px solid #1976d2; border-radius: 3px;">
+                    <strong style="color: #004085; font-size: 11pt;">ℹ Printing Instr:</strong>
+                    <div style="margin-top: 3px; font-size: 10pt; color: #000; font-weight: bold; background: #fff; padding: 5px; border: 1px dashed #007bff;">{{ $jobCard->printing_instruction }}</div>
+                </div>
+                @endif
+                
+                <!-- Global Finishing Instruction -->
+                @if(!empty($jobCard->finishing_instruction))
+                <div style="margin-top: 5px; padding: 5px; background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); border: 1.5px solid #28a745; border-radius: 3px;">
+                    <strong style="color: #155724; font-size: 11pt;">✂ Finishing Instr:</strong>
+                    <div style="margin-top: 3px; font-size: 10pt; color: #000; font-weight: bold; background: #fff; padding: 5px; border: 1px dashed #28a745;">{{ $jobCard->finishing_instruction }}</div>
+                </div>
+                @endif
+            @endif
         </div>
 
-        <div class="section-box flex-grow-1" style="min-height: 3mm;">
-            <div class="section-title">General Remarks</div>
-            <div class="p-1" style="font-size: 8px; font-weight: bold;">
+        <div class="section-box" style="margin-top: 1px;">
+            <div class="section-title">5. General Remarks</div>
+            <div class="p-0" style="font-size: 9pt; font-weight: bold; padding: 2px;">
                 {{ $jobCard->remarks ?: 'N/A' }}
             </div>
         </div>

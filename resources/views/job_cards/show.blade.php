@@ -8,9 +8,6 @@
             <a href="{{ route('job-cards.print', $jobCard->id) }}" target="_blank" class="btn btn-info">
                 <i class="fas fa-print"></i> Print
             </a>
-            <a href="{{ route('job-cards.download', $jobCard->id) }}" class="btn btn-primary">
-                <i class="fas fa-file-pdf"></i> Download PDF
-            </a>
             <a href="{{ route('job-cards.edit', $jobCard->id) }}" class="btn btn-warning">Edit</a>
             <a href="{{ route('job-cards.index') }}" class="btn btn-secondary">Back</a>
         </div>
